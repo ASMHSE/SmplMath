@@ -550,6 +550,7 @@ fSlvTLS macro name:=<fslv_tls>,cb:=<4*@WordSize>
 %	IFDEF fslv_tls_name
 		.err <TLS duplication>
 	ELSE
+		fslv_tls_curr_used = 0 ; 04/10/2020 HSE 
 		fslv_tls_alloc_line = @Line
 		fslv_tls_cb = FSBE_FNC(%FSBE_ENTITY,%FSEN_TLS_SIZE)
 		IF fslv_tls_cb NE 0 AND fslv_tls_cb GT cb
@@ -1935,4 +1936,3 @@ endm
 		ENDIF
 	ENDIF	
 endm
-            
