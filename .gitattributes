@@ -1,6 +1,6 @@
-*.asm linguist-language=Assembler
-*.inc linguist-language=Assembler
-*.lib linguist-language=Assembler
-SmplMth/*.inc linguist-language=Assembler
+*.asm linguist-language=Assembly
+*.inc linguist-language=Assembly
+*.lib linguist-language=Assembly
+SmplMth/*.inc linguist-language=Assembly
 
 SmplMath/documentation/* linguist-documentation
