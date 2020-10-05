@@ -2,3 +2,5 @@
 *.inc linguist-language=Assembler
 *.lib linguist-language=Assembler
 SmplMth/*.inc linguist-language=Assembler
+
+SmplMath/documentation/* linguist-documentation
