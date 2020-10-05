@@ -1,2 +1,2 @@
-*.c linguist-detectable=false
-asm/* linguist-vendored
+*.asm linguist-language=Assembler
+*.inc linguist-language=Assembler
