@@ -3,5 +3,6 @@
 *.lib linguist-language=Assembly
 *.exe linguist-language=Assembly
 *.dll linguist-language=Assembly
+*.def linguist-language=Assembly
 *.prra linguist-language=Assembly
 SmplMath/documentation/* linguist-documentation
