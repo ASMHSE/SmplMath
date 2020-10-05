@@ -6,4 +6,5 @@
 *.def linguist-language=Assembly
 *.exp linguist-language=Assembly
 *.prra linguist-language=Assembly
+Readme.md linguist-documentation
 SmplMath/documentation/* linguist-documentation
