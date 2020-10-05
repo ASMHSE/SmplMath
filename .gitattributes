@@ -1,3 +1,4 @@
 *.asm linguist-language=Assembler
 *.inc linguist-language=Assembler
 *.lib linguist-language=Assembler
+SmplMth/*.inc linguist-language=Assembler
