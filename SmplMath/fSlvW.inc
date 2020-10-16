@@ -11,18 +11,18 @@
 ; *                                                          *
 ; ************************************************************/
 
-;  A little wrapper of fSlv to manage some 
-;  compound operators(*=, /=, +=, -=, ++, --)
+;    A little wrapper of fSlv to manage some 
+;    compound operators(*=, /=, +=, -=, ++, --)
 ; 
 ;    Use:
 ; 
-;        fSlvW res1 = 10.0 + 5.0
-;        fSlvW res1 ++
-;        fSlvW res1 -= -10
-;        fSlvW res1 *= 2 ^ x
+;         fSlvW res1 = 10.0 + 5.0
+;         fSlvW res1 ++
+;         fSlvW res1 -= -10
+;         fSlvW res1 *= 2 ^ x
 ;   
-;        mov eax, 0
-;        fSlvW res1[eax*8] /= 2+ 4 *x
+;         mov eax, 0
+;         fSlvW res1[eax*8] /= 2+ 4 *x
 ;
 
 
