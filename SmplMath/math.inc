@@ -3,6 +3,8 @@
 ; *                                                      *
 ; *          Copyright by qWord, 2011-2014               *
 ; *                                                      *
+; *            Modified by HSE, 2020                     *
+; *                                                      *
 ; *          SmplMath.Masm{at}gmx{dot}net                *
 ; *    http://sourceforge.net/projects/smplmath/         *
 ; *                                                      *
@@ -44,4 +46,5 @@ include \macros\SmplMath\backends\x86_32_64_fpu.inc
 include \macros\SmplMath\backends\x86_32_64_sse2_fpu.inc
 include \macros\SmplMath\backends\x86_32_64.inc
 
+include \macros\SmplMat\fSlvW.inc
 LOAD_DEFAULT_BACKEND
