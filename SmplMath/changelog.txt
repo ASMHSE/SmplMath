@@ -1,3 +1,8 @@
+29.12.2020
+            added:       - ForLp / Next : Ascendent integer loop
+                         - ForLpN / NextN : Descendent integer loop
+                         - ForLpR / NextR : REAL8 loop
+                         
 16.10.2020  
             added:       - fSlvW : macro wrapper of fSlv to manage some compound operators(*=, /=, +=, -=, ++, --)
 
