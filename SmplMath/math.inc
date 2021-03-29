@@ -17,10 +17,8 @@
 IFDEF __SMPLMATH__
 	.err <SmplMath: double inclusion of math.inc>
 	fslv_glb_error = 1
-	freg_glb_error = 1
 ELSE
 	__SMPLMATH__ TEXTEQU <020002>
-	freg_glb_error = 0
 ENDIF
 
 IF @WordSize EQ 4
@@ -49,4 +47,5 @@ include \macros\SmplMath\backends\x86_32_64_sse2_fpu.inc
 include \macros\SmplMath\backends\x86_32_64.inc
 
 include \macros\SmplMat\fSlvW.inc
+include \macros\SmplMat\SmplReg.inc
 LOAD_DEFAULT_BACKEND
