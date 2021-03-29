@@ -46,6 +46,6 @@ include \macros\SmplMath\backends\x86_32_64_fpu.inc
 include \macros\SmplMath\backends\x86_32_64_sse2_fpu.inc
 include \macros\SmplMath\backends\x86_32_64.inc
 
-include \macros\SmplMat\fSlvW.inc
-include \macros\SmplMat\SmplReg.inc
+include \macros\SmplMath\fSlvW.inc
+include \macros\SmplMath\SmplReg.inc
 LOAD_DEFAULT_BACKEND
