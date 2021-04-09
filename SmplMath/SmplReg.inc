@@ -196,6 +196,10 @@ set_previous_reglbl macro; name:req
     EXITM
 endm
 
+freg_correction macro val1:req
+	freg_tls_curr_used = freg_tls_curr_used &val1 *@WordSize
+    EXITM
+endm
 ;------------------------------------------------------------------------------
 
 freg_push macro reg:REQ
@@ -203,9 +207,9 @@ freg_push macro reg:REQ
 	freg_line = @Line
     ENDIF
     IFE @freg_TLS?()
-	@fregTLS_warning
-	freg_bool_byte TEXTEQU get_unique_reglbl(<freg_bool_byte_>)
-       if unique_reg_cntr GT maximum_reg_cntr
+      @fregTLS_warning
+	  freg_bool_byte TEXTEQU get_unique_reglbl(<freg_bool_byte_>)
+        if unique_reg_cntr GT maximum_reg_cntr
            IF freg_line NE @Line
         	freg_line = @Line
         	.data?
@@ -226,6 +230,12 @@ freg_push macro reg:REQ
             freg_bool_byte TEXTEQU @fregTLS_line_alloc(REAL4_BYTE)
         elseif TYPE(reg) eq QWORD
             freg_bool_byte TEXTEQU @fregTLS_line_alloc(REAL8_BYTE)
+        else
+            if @WordSize eq 8
+                freg_bool_byte TEXTEQU @fregTLS_line_alloc(REAL8_BYTE)
+            else
+                freg_bool_byte TEXTEQU @fregTLS_line_alloc(REAL4_BYTE)
+            endif
         endif    
     ENDIF
 
@@ -238,7 +248,12 @@ freg_push macro reg:REQ
     elseif TYPE(reg) eq QWORD
         mov qword ptr freg_bool_byte , reg
     else
-        .err reg is more than qword 
+        if @WordSize eq 8
+            mov qword ptr freg_bool_byte , reg
+        else
+            mov dword ptr freg_bool_byte , reg
+        endif
+        ;.err reg is more than qword 
     endif
 endm
 
@@ -256,6 +271,12 @@ freg_pop macro reg:REQ
             freg_bool_byte TEXTEQU @fregTLS_line_retrieve(REAL4_BYTE)
         elseif TYPE(reg) eq QWORD
             freg_bool_byte TEXTEQU @fregTLS_line_retrieve(REAL8_BYTE)
+        else
+            if @WordSize eq 8
+                freg_bool_byte TEXTEQU @fregTLS_line_retrieve(REAL8_BYTE)
+            else
+                freg_bool_byte TEXTEQU @fregTLS_line_retrieve(REAL4_BYTE)
+            endif
         endif    
     ENDIF
 
@@ -268,7 +289,12 @@ freg_pop macro reg:REQ
     elseif TYPE(reg) eq QWORD
         mov reg,qword ptr freg_bool_byte
     else
-        .err reg is more than qword 
+        if @WordSize eq 8
+            mov reg,qword ptr freg_bool_byte
+        else
+            mov reg,dword ptr freg_bool_byte
+        endif
+        ;.err reg is more than qword 
     endif
 endm
 
@@ -292,4 +318,34 @@ fregTLS macro name:=<freg_tls>,cb:=<4*@WordSize>
 		freg_tls_name TEXTEQU @TrimStr(<&name>)
 		EXITM @CatStr(<&name&[freg_tls_cb]:BYTE>)
 	ENDIF
+endm
+
+freg_pushv macro var:REQ, reg
+    ifnb <reg>
+        mov  &reg, &var
+        freg_push &reg
+    else
+        if @WordSize eq 4
+            mov eax, &var
+            freg_push eax
+        else
+            mov r110, &var
+            freg_push r10
+        endif
+    endif
+endm
+
+freg_popv macro var:REQ, reg
+    ifnb <reg>
+        freg_pop &reg
+        mov &var, &reg
+    else
+        if @WordSize eq 4
+            freg_pop eax
+            mov &var, eax
+        else
+            freg_pop r10
+            mov &var, r10
+        endif
+    endif
 endm

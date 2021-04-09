@@ -1,3 +1,10 @@
+09.04.2021
+            added:       - Pseudo pudh/pop variables (freg_pushv/freg_popv)
+                         - freg_correction for unblanced number of push or pop
+                         
+29.03.2021
+            added:       - Pseudo pudh/pop registers (freg_push/freg_pop)
+            
 29.12.2020
             added:       - ForLp / Next : Ascendent integer loop
                          - ForLpN / NextN : Descendent integer loop
