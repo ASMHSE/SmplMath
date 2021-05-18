@@ -1,7 +1,7 @@
 ;/********************************************************
 ; * This file is part of the SmplReg macros-system.      *
 ; *                                                      *
-; *            Copyright by HSE, 2019                    *
+; *            Copyright by HSE, 2019-2021               *
 ; *              for the MASM32 SDK                      *
 ; *                                                      *
 ; ********************************************************/
