@@ -329,7 +329,7 @@ freg_pushv macro var:REQ, reg
             mov eax, &var
             freg_push eax
         else
-            mov r110, &var
+            mov r10, &var
             freg_push r10
         endif
     endif
