@@ -1455,6 +1455,21 @@ r8IsValid macro mem64:req
 	EXITM <!ZERO?>
 endm
 
+r8IsNotNaN macro mem64:req
+	IF @WordSize EQ 4
+		push DWORD ptr mem64+4
+		and DWORD ptr [esp],7FF80000h
+		xor DWORD ptr [esp],7FF80000h
+		lea esp,[esp+4]
+	ELSE
+		push rax
+		mov eax,DWORD ptr mem64+4
+		and eax,7FF80000h
+		xor eax,7FF80000h
+		pop rax
+	ENDIF
+	EXITM <!ZERO?>
+endm
 
 ;/*
 ; * fcmp a,b
