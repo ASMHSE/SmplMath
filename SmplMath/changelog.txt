@@ -1,3 +1,6 @@
+21.05.2021
+            added:       - r8IsNotNaN : macro to check (similar to r8IsValid but specific for NaN)
+            
 09.04.2021
             added:       - Pseudo pudh/pop variables (freg_pushv/freg_popv)
                          - freg_correction for unblanced number of push or pop
