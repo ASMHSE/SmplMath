@@ -2,7 +2,7 @@
 ;/************************************************************
 ; * This file is an extention of the SmplMath macros-system. *
 ; *                                                          *
-; *               Copyright by HSE, 2020                     *
+; *               Copyright by HSE, 2020-2021                *
 ; *                                                          *
 ; *          https://github.com/ASMHSE/SmplMath/             *
 ; *                                                          *
@@ -72,6 +72,13 @@ CutFor	macro	LCV
 		inc	LCV
 		jmpLoop $$For&LCV&, %$$For&LCV&
 		endm
+
+ForLp_df macro LCV, Start, Stop       ;; not including Stop ej: i < Stop
+    mov xax, Stop
+    dec xax
+    mov LCV&_t, xax
+    ForLp	&LCV, &Start, LCV&_t
+endm
 
 ;######################################################
 ; For-Next Descendent Loop macros
