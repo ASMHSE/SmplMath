@@ -3,7 +3,7 @@
 ; *                                                      *
 ; *          Copyright by qWord, 2011-2014               *
 ; *                                                      *
-; *            Modified by HSE, 2020                     *
+; *            Modified by HSE, 2020-2021                *
 ; *                                                      *
 ; *          SmplMath.Masm{at}gmx{dot}net                *
 ; *    http://sourceforge.net/projects/smplmath/         *
@@ -25,8 +25,9 @@ IF @WordSize EQ 4
 	includelib \macros\SmplMath\lib\x86\SmplMath.lib
 ELSEIF @WordSize EQ 8
 	IFNDEF __JWASM__
-		.err <The SmplMath System requires JWASM for x86-64 support>
-		fslv_glb_error = 1
+              echo * * *   Not full tested with ML64   * * * 
+		;.err <The SmplMath System requires JWASM for x86-64 support>
+		;fslv_glb_error = 1
 	ENDIF
 	includelib \macros\SmplMath\lib\x64\SmplMath.lib
 ELSE
