@@ -2,7 +2,7 @@
 ; HSE extension floating point comparisons 2020
 ; HSE extension unsigned comparisons 2021
 ; HSE extension floating point checks 2021
-; HSE oblieration instead of remotion of ab and space 2021
+; HSE oblieration instead of remotion of tab and space 2021
 
 
   ; ************************************************
