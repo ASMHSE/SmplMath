@@ -2,7 +2,7 @@
 The SmplMath macros system is a collection of MASM macros for evaluating mathematic expression developed by qWord. There is a whole bunch of macros for expression evaluation, comparison and FPU related topics.
 
 example:
-```Assembly
+```JAVA
      .if fGT(Pb, @fSlv8(710.2740349*0.63))
 						
         fSlv8 AaPbB = (spba + spbb /( 1 + (( Pb - spbc)/ spbd)^2)) \ 
