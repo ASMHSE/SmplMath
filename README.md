@@ -3,14 +3,14 @@ The SmplMath macros system is a collection of MASM macros for evaluating mathema
 
 example:
 
-     .if fGT(Pb, @fSlv8(710.2740349*0.63))
+     .if __fGT__(Pb, __@fSlv8__(710.2740349*0.63))
 						
-        fSlv8 AaPbB = (spba + spbb /( 1 + (( Pb - spbc)/ spbd)^2)) \ 
+        __fSlv8__ AaPbB = (spba + spbb /( 1 + (( Pb - spbc)/ spbd)^2)) \ 
                      * ((710.2740349 /  bDNAmx) - ( Pb /  BDNA))\
                      / (1.0 +  ( KAaPbB /  cAa1))
     .else
 		
-        fSlv8 AaPbB = (spbpa + spbpb * ( Pb ^  spbpc)) \ 
+        __fSlv8__ AaPbB = (spbpa + spbpb * ( Pb ^  spbpc)) \ 
                      * ((710.2740349 /  bDNAmx) - ( Pb /  BDNA))\
                      / (1.0 +  ( KAaPbB /  cAa1))
     .endif
