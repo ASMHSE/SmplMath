@@ -50,4 +50,6 @@ include \macros\SmplMath\backends\x86_32_64.inc
 include \macros\SmplMath\fSlvW.inc
 include \macros\SmplMath\SmplReg.inc
 include \macros\SmplMath\ForLp.inc
+include \macros\SmplMath\IfElseM.inc
+
 LOAD_DEFAULT_BACKEND
