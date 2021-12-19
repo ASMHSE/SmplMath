@@ -52,65 +52,6 @@
       % echo     **************************************
     ENDM
   ; ************************************************
-if 0
-r4Is_NotNaN macro mem32:req
-	IF @WordSize EQ 4
-		push mem32
-		and DWORD ptr [esp],7FF80000h
-		xor DWORD ptr [esp],7FF80000h
-		lea esp,[esp+4]
-	ELSE
-		push rax
-		mov eax,mem32
-		and eax,7F800000h
-		xor eax,7F800000h
-		pop rax
-	ENDIF
-endm
-
-r8Is_NotNaN macro mem64:req
-	IF @WordSize EQ 4
-		push DWORD ptr mem64+4
-		and DWORD ptr [esp],7FF80000h
-		xor DWORD ptr [esp],7FF80000h
-		lea esp,[esp+4]
-	ELSE
-		push rax
-		mov eax,DWORD ptr mem64+4
-		and eax,7FF80000h
-		xor eax,7FF80000h
-		pop rax
-	ENDIF
-endm
-r4Is_Valid macro mem32:req
-	IF @WordSize EQ 4
-		push mem32
-		and DWORD ptr [esp],7F800000h
-		xor DWORD ptr [esp],7F800000h
-		lea esp,[esp+4]
-	ELSE
-		push rax
-		mov eax,mem32
-		and eax,7F800000h
-		xor eax,7F800000h
-		pop rax
-	ENDIF
-endm
-r8Is_Valid macro mem64:req
-	IF @WordSize EQ 4
-		push DWORD ptr mem64+4
-		and DWORD ptr [esp],7FF00000h
-		xor DWORD ptr [esp],7FF00000h
-		lea esp,[esp+4]
-	ELSE
-		push rax
-		mov eax,DWORD ptr mem64+4
-		and eax,7FF00000h
-		xor eax,7FF00000h
-		pop rax
-	ENDIF
-endm
-endif
 
     TypeOf MACRO arg
       EXITM % opattr(arg)

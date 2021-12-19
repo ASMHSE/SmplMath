@@ -1,4 +1,7 @@
 
+19.12.2021
+            added:       - IfElse test for ML64
+
 06.12.2021
             added:       - x64_console test for ML64
             moved:       - ConstDiv.inc, macros.inc and strings to new directory "accs"
@@ -7,6 +10,8 @@
 03.12.2021
             added:       - updated if/else macros from Mabdelouahab.
                          - example mabm2.asm to use this macros.
+                         - r4IsNotNaN : macro to check (similar to r4IsValid but specific for NaN)
+                         - added r8Is_NotNaN and r4Is_NotNaN for IfElse evaluations. 
               
 21.05.2021
             added:       - r8IsNotNaN : macro to check (similar to r8IsValid but specific for NaN)

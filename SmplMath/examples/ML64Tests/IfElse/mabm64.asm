@@ -5,9 +5,9 @@
         @WordSize equ 8
     endif
 
-    include \masm32\macros\SmplMath\math.inc
-    include \masm32\macros\SmplMath\accs\macros.inc
-    include \masm32\macros\SmplMath\accs\Macros64G.inc
+    include \macros\SmplMath\math.inc
+    include \macros\SmplMath\accs\macros.inc
+    include \macros\SmplMath\accs\Macros64G.inc
     
 ; ¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤
 

@@ -3,13 +3,17 @@
 ; *                                                      *
 ; *          Copyright by qWord, 2011-2014               *
 ; *                                                      *
+; *            Modified by HSE, 2020-2021                *
+; *                                                      *
 ; *          SmplMath.Masm{at}gmx{dot}net                *
 ; *    http://sourceforge.net/projects/smplmath/         *
+; *                                                      *
+; *       https://github.com/ASMHSE/SmplMath             *
 ; *                                                      *
 ; *  Further Copyright and Legal statements are located  *
 ; *  in the documentation (Documentation.pdf).           *
 ; *                                                      *
-; ********************************************************/
+; ********************************************************
 
 IFNDEF BOOLEAN_BYTE
 	BOOLEAN_BYTE typedef BYTE
@@ -1398,6 +1402,7 @@ fSlvRegIteratedExpr macro ExprName:req,nArgs:=<1>,Rest:=<0>,Expression:VARARG
 		EXITM
 	ENDIF
 	
+
 	fsre_cntr = 1
 	REPEAT nArgs
 	%	IF @InStr(1,<&Expression>,@CatStr(<arg>,%fsre_cntr)) EQ 0
@@ -1423,7 +1428,7 @@ fSlvRegIteratedExpr macro ExprName:req,nArgs:=<1>,Rest:=<0>,Expression:VARARG
 	@CatStr(<fSlv_Expr_rest_>,%fsre_name) TEXTEQU @TrimStr(<&Rest>)
 endm
 
-r4IsValid macro mem32:req
+r4Is_Valid macro mem32:req
 	IF @WordSize EQ 4
 		push mem32
 		and DWORD ptr [esp],7F800000h
@@ -1436,10 +1441,14 @@ r4IsValid macro mem32:req
 		xor eax,7F800000h
 		pop rax
 	ENDIF
+endm
+r4IsValid macro mem32:req
+       r4Is_Valid &mem32
 	EXITM <!ZERO?>
 endm
 
-r8IsValid macro mem64:req
+
+r8Is_Valid macro mem64:req
 	IF @WordSize EQ 4
 		push DWORD ptr mem64+4
 		and DWORD ptr [esp],7FF00000h
@@ -1452,10 +1461,33 @@ r8IsValid macro mem64:req
 		xor eax,7FF00000h
 		pop rax
 	ENDIF
+endm
+r8IsValid macro mem64:req
+       r8Is_Valid &mem64
 	EXITM <!ZERO?>
 endm
 
-r8IsNotNaN macro mem64:req
+
+r4Is_NotNaN macro mem32:req
+	IF @WordSize EQ 4
+		push mem32
+		and DWORD ptr [esp],7FF80000h
+		xor DWORD ptr [esp],7FF80000h
+		lea esp,[esp+4]
+	ELSE
+		push rax
+		mov eax,mem32
+		and eax,7F800000h
+		xor eax,7F800000h
+		pop rax
+	ENDIF
+endm
+r4IsNotNaN macro mem32:req
+       r4Is_NotNaN &mem32
+	EXITM <!ZERO?>
+endm
+
+r8Is_NotNaN macro mem64:req
 	IF @WordSize EQ 4
 		push DWORD ptr mem64+4
 		and DWORD ptr [esp],7FF80000h
@@ -1468,8 +1500,12 @@ r8IsNotNaN macro mem64:req
 		xor eax,7FF80000h
 		pop rax
 	ENDIF
+endm
+r8IsNotNaN macro mem64:req
+       r8Is_NotNaN &mem64
 	EXITM <!ZERO?>
 endm
+
 
 ;/*
 ; * fcmp a,b
