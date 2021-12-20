@@ -2,7 +2,7 @@
 ;/************************************************************
 ; * This file is an extention of the SmplMath macros-system. *
 ; *                                                          *
-; *               Copyright by HSE, 2020-2021                *
+; *            Copyright by HSE, 2020-2022                   *
 ; *                                                          *
 ; *          https://github.com/ASMHSE/SmplMath/             *
 ; *                                                          *
@@ -10,19 +10,6 @@
 ; *    in the documentation (Documentation.pdf).             *
 ; *                                                          *
 ; ************************************************************/
-
-;/********************************************************
-; *            SmplMath macros-system                    *
-; *                                                      *
-; *          Copyright by qWord, 2011-2014               *
-; *                                                      *
-; *          SmplMath.Masm{at}gmx{dot}net                *
-; *    http://sourceforge.net/projects/smplmath/         *
-; *                                                      *
-; *  Further Copyright and Legal statements are located  *
-; *  in the documentation (Documentation.pdf).           *
-; *                                                      *
-; ********************************************************/
 
 ;############################################################
 ; For-Next macros from Chapter Eight.
@@ -41,7 +28,17 @@ jmpLoop	macro FirstHalf, SecondHalf
 		jmp &FirstHalf&&SecondHalf&
 		endm
 
-ForLp	macro	LCV, Start, Stop
+ForLp	macro	LCV:req, Start:req, Stop:req,AuxReg
+
+             inb <&AuxReg>
+                  _eax textequ <&AuxReg> 
+              else
+                  if @WordSize eq 8
+                      _eax textequ <rax>
+                  else
+                      _eax textequ <eax>
+                  endif
+              endif
 
 		ifndef $$For&LCV&
 $$For&LCV&	=	0
@@ -49,36 +46,45 @@ $$For&LCV&	=	0
 $$For&LCV&	=	$$For&LCV& + 1
 		endif
 
-		mov	eax , Start
-		mov	LCV, eax
+		mov	_eax , Start
+		mov	LCV, xax
 
 		MakeLbl $$For&LCV&, %$$For&LCV&
-		mov	eax , LCV
-		cmp	eax , Stop
+		mov	_eax , LCV
+		cmp	_eax , Stop
 		jgDone $$Next&LCV&, %$$For&LCV&
 		endm
 
-Next		macro	LCV
+Next		macro	LCV:req
 		inc	LCV
 		jmpLoop $$For&LCV&, %$$For&LCV&
 		MakeLbl $$Next&LCV&, %$$For&LCV&
 		endm
 
-ExitFor	macro	LCV
+ExitFor	macro	LCV:req
 		jmpLoop $$Next&LCV&, %$$For&LCV&
 		endm
 
-CutFor	macro	LCV
+CutFor	macro	LCV:req
 		inc	LCV
 		jmpLoop $$For&LCV&, %$$For&LCV&
 		endm
 
-ForLp_df macro LCV, Start, Stop       ;; not including Stop ej: i < Stop
-    mov xax, Stop
-    dec xax
-    mov LCV&_t, xax
-    ForLp	&LCV, &Start, LCV&_t
-endm
+ForLp_df macro LCV:req, Start:req, Stop:req,AuxReg       ;; not including Stop ej: i < Stop
+             inb <&AuxReg>
+                  _eax textequ <&AuxReg> 
+              else
+                  if @WordSize eq 8
+                      _eax textequ <rax>
+                  else
+                      _eax textequ <eax>
+                  endif
+              endif
+		mov _eax, Stop
+		dec _eax
+		mov LCV&_t, xax
+		ForLp	&LCV, &Start, LCV&_t
+		endm
 
 ;######################################################
 ; For-Next Descendent Loop macros
@@ -88,28 +94,43 @@ jgDoneN	macro FirstHalf, SecondHalf
 		jl &FirstHalf&&SecondHalf&
 		endm
 
-ForLpN	macro	LCV, Start, Stop
+ForLpN	macro	LCV:req, Start:req, Stop:req, AuxReg
 
+              inb <&AuxReg>
+                  _eax textequ <&AuxReg> 
+              else
+                  if @WordSize eq 8
+                      _eax textequ <rax>
+                  else
+                      _eax textequ <eax>
+                  endif
+              endif
 		ifndef $$For&LCV&
 $$For&LCV&	=	0
 		else
 $$For&LCV&	=	$$For&LCV& + 1
 		endif
 
-		mov	eax , Start
-		mov	LCV, eax
+		mov	_eax , Start
+		mov	LCV, _eax
 
 		MakeLbl $$For&LCV&, %$$For&LCV&
-		mov	eax , LCV
-		cmp	eax , Stop
+		mov	_eax , LCV
+		cmp	_eax , Stop
 		jgDoneN $$Next&LCV&, %$$For&LCV&
 		endm
 
-NextN	       macro	LCV
+NextN	       macro	LCV:req
 		dec	LCV
 		jmpLoop $$For&LCV&, %$$For&LCV&
 		MakeLbl $$Next&LCV&, %$$For&LCV&
 		endm
+
+CutForN	macro	LCV:req
+		dec	LCV
+		jmpLoop $$For&LCV&, %$$For&LCV&
+		endm
+
 
 ;######################################################
 ; For-Next Floating point macros
@@ -145,7 +166,7 @@ jmpLoopR	macro FirstHalf, SecondHalf
 		jmp &FirstHalf&&SecondHalf&
 		endm
 
-ForLpR	macro	LCV, Start, Stop, Step
+ForLpR	macro	LCV:req, Start:req, Stop:req, Step:req
 
 		ifndef $$For&LCV&
 $$For&LCV&	=	0
@@ -164,7 +185,7 @@ $$For&LCV&	=	$$For&LCV& + 1
              jgDoneR $$Next&LCV&, %$$For&LCV&
 		endm
 
-NextR       macro	LCV, stap
+NextR       macro	LCV:req, stap
             ifnb <stap>
             %	 @CatStr(<echo &stap ya no es necesario en>,%@FileCur,< >, %@Line)
             endif
@@ -175,11 +196,11 @@ NextR       macro	LCV, stap
             MakeLblR $$Next&LCV&, %$$For&LCV&
             endm
 
-ExitForR    macro	LCV
+ExitForR    macro	LCV:req
             jmpLoopR $$Next&LCV&, %$$For&LCV&
             endm
 
-CutForR     macro	LCV , stap
+CutForR     macro	LCV:req , stap
             ifnb <stap>
             %	 @CatStr(<echo &stap ya no es necesario en>,%@FileCur,< >, %@Line)
             endif
