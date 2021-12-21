@@ -1,20 +1,16 @@
-;/********************************************************
-; * This file is part of the SmplReg macros-system.      *
-; *                                                      *
-; *            Copyright by HSE, 2019-2021               *
-; *              for the MASM32 SDK                      *
-; *                                                      *
-; ********************************************************/
 
-;/********************************************************
-; * This file is based in SmplMath macros-system.        *
-; *                                                      *
-; *          Copyright by qWord, 2011-2014               *
-; *                                                      *
-; *          SmplMath.Masm{at}gmx{dot}net                *
-; *    http://sourceforge.net/projects/smplmath/         *
-; *                                                      *
-; ********************************************************/
+;/************************************************************
+; * This file is an extension of the SmplMath macros-system. *
+; *                                                          *
+; *            Copyright by HSE, 2019-2022                   *
+; *                                                          *
+; *          https://github.com/ASMHSE/SmplMath/             *
+; *                                                          *
+; *    Further Copyright and Legal statements are located    *
+; *    in the documentation (Documentation.pdf).             *
+; *                                                          *
+; ************************************************************/
+
 
 IFDEF __SMPLREG__
 	.err <SmplReg: double inclusion of SmplReg.inc>
@@ -91,6 +87,7 @@ freg_tls_alloc_line = 0
 endm
 
 @fregTLS_line_alloc macro _type:req
+
 	IFB freg_tls_name
 		freg_glb_error_msg TEXTEQU <[#CG17] thread local storage not initialized>
 		freg_glb_error = 1
@@ -124,7 +121,6 @@ endm
 	IF fsta_align GT @WordSize
 		fsta_align = @WordSize
 	ENDIF
-      
 
 	IF ((freg_tls_curr_used+(fsta_align-1))AND(-fsta_align))+fsta_size GT freg_tls_cb
      
@@ -139,6 +135,7 @@ endm
 endm
 
 @fregTLS_line_retrieve macro _type:req
+
 	IFB freg_tls_name
 		freg_glb_error_msg TEXTEQU <[#CG17] thread local storage not initialized>
 		freg_glb_error = 1
@@ -148,6 +145,14 @@ endm
 		freg_glb_error = 1
 		EXITM freg_retval@error(_type)
 	ENDIF
+	;IF fregTLS_curr_line NE @Line
+	;	fregTLS_curr_line = @Line
+	;	freg_tls_curr_used = 0
+	;	freg_tls_byte = 0
+       ;ELSE  
+       ;    freg_tls_curr_used = 0
+
+	;ENDIF
 	
 	fsta_size = sizeof _type
 	IFE fsta_size 
@@ -164,9 +169,50 @@ endm
 	IF fsta_align GT @WordSize
 		fsta_align = @WordSize
 	ENDIF
-	fsta_var TEXTEQU <&_type ptr >,freg_tls_name,<[>,%((freg_tls_curr_used+(fsta_align-1))AND(-fsta_align))- fsta_size,<]>
-	freg_tls_curr_used = ((freg_tls_curr_used+(fsta_align-1))AND(-fsta_align)) - fsta_size
-	EXITM fsta_var
+
+    fsta_var TEXTEQU <&_type ptr >,freg_tls_name,<[>,%((freg_tls_curr_used+(fsta_align-1))AND(-fsta_align))- fsta_size,<]>
+    freg_tls_curr_used = ((freg_tls_curr_used+(fsta_align-1))AND(-fsta_align)) - fsta_size
+    EXITM fsta_var
+endm
+
+@fregTLS_line_access macro _type:req
+	IFB freg_tls_name
+		freg_glb_error_msg TEXTEQU <[#CG17] thread local storage not initialized>
+		freg_glb_error = 1
+		EXITM freg_retval@error(_type)
+%	ELSEIFNDEF freg_tls_name
+		freg_glb_error_msg TEXTEQU <[#CG18] thread local storage not initialized>
+		freg_glb_error = 1
+		EXITM freg_retval@error(_type)
+	ENDIF
+	;IF fregTLS_curr_line NE @Line
+	;	fregTLS_curr_line = @Line
+	;	freg_tls_curr_used = 0
+	;	freg_tls_byte = 0
+       ;ELSE  
+       ;    freg_tls_curr_used = 0
+
+	;ENDIF
+	
+	fsta_size = sizeof _type
+	IFE fsta_size 
+		freg_glb_error_msg TEXTEQU <[#CG19] invalid type qualifier / type not supported by current back end: _type>
+		freg_glb_error = 1
+           % .err freg_glb_error_msg
+		EXITM freg_retval@error(_type)
+	ENDIF
+	IF fsta_size EQ 12
+		fsta_align = 4
+	ELSE
+		fsta_align = fsta_size
+	ENDIF
+	IF fsta_align GT @WordSize
+		fsta_align = @WordSize
+	ENDIF
+
+    fsta_var TEXTEQU <&_type ptr >,freg_tls_name,<[>,%((freg_tls_curr_used+(fsta_align-1))AND(-fsta_align))- fsta_size,<]>
+ ;   freg_tls_curr_access = ((freg_tls_curr_used+(fsta_align-1))AND(-fsta_align)) - fsta_size
+    EXITM fsta_var
 endm
 
 
@@ -298,6 +344,48 @@ freg_pop macro reg:REQ
     endif
 endm
 
+
+freg_peek macro reg:REQ
+
+    IFE @freg_TLS?()
+        freg_bool_byte TEXTEQU get_last_reglbl(<freg_bool_byte_>)
+;        set_previous_reglbl 
+    ELSE
+        if TYPE(reg) eq BYTE
+            freg_bool_byte TEXTEQU @fregTLS_line_access(BOOLEAN_BYTE)
+        elseif TYPE(reg) eq WORD
+            freg_bool_byte TEXTEQU @fregTLS_line_access(REAL2_BYTE)
+        elseif TYPE(reg) eq DWORD
+            freg_bool_byte TEXTEQU @fregTLS_line_access(REAL4_BYTE)
+        elseif TYPE(reg) eq QWORD
+            freg_bool_byte TEXTEQU @fregTLS_line_access(REAL8_BYTE)
+        else
+            if @WordSize eq 8
+                freg_bool_byte TEXTEQU @fregTLS_line_access(REAL8_BYTE)
+            else
+                freg_bool_byte TEXTEQU @fregTLS_line_access(REAL4_BYTE)
+            endif
+        endif    
+    ENDIF
+
+    if TYPE(reg) eq BYTE
+        mov reg, byte ptr freg_bool_byte
+    elseif TYPE(reg) eq WORD
+        mov reg, word ptr freg_bool_byte
+    elseif TYPE(reg) eq DWORD
+        mov reg,dword ptr freg_bool_byte
+    elseif TYPE(reg) eq QWORD
+        mov reg,qword ptr freg_bool_byte
+    else
+        if @WordSize eq 8
+            mov reg,qword ptr freg_bool_byte
+        else
+            mov reg,dword ptr freg_bool_byte
+        endif
+        ;.err reg is more than qword 
+    endif
+endm
+
 fregTLS macro name:=<freg_tls>,cb:=<4*@WordSize>
 ;	IFB FSBE_ENTITY
 ;		EXITM <&name&[1]:BYTE>
@@ -349,3 +437,19 @@ freg_popv macro var:REQ, reg
         endif
     endif
 endm
+
+freg_peekv macro var:REQ, reg
+    ifnb <reg>
+        freg_peek &reg
+        mov &var, &reg
+    else
+        if @WordSize eq 4
+            freg_peek eax
+            mov &var, eax
+        else
+            freg_peek r10
+            mov &var, r10
+        endif
+    endif
+endm
+

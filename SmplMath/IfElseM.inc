@@ -1,3 +1,16 @@
+
+;/************************************************************
+; * This file is an extension of the SmplMath macros-system. *
+; *                                                          *
+; *            Copyright by HSE, 2020-2022                   *
+; *                                                          *
+; *          https://github.com/ASMHSE/SmplMath/             *
+; *                                                          *
+; *    Further Copyright and Legal statements are located    *
+; *    in the documentation (Documentation.pdf).             *
+; *                                                          *
+; ************************************************************/
+
 ; Mab Macros 2017
 ; HSE extension floating point comparisons 2020
 ; HSE extension unsigned comparisons 2021

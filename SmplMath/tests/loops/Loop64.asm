@@ -1,3 +1,15 @@
+;/************************************************************
+; *   This file is a test of the SmplMath macros-system.     *
+; *                                                          *
+; *            Copyright by HSE, 2020-2022                   *
+; *                                                          *
+; *          https://github.com/ASMHSE/SmplMath/             *
+; *                                                          *
+; *    Further Copyright and Legal statements are located    *
+; *    in the documentation (Documentation.pdf).             *
+; *                                                          *
+; ************************************************************/
+
 ; ¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤
 
     include \masm32\include64\masm64rt.inc

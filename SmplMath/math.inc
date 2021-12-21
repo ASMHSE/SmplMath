@@ -47,7 +47,7 @@ include \macros\SmplMath\backends\x86_32_64_fpu.inc
 include \macros\SmplMath\backends\x86_32_64_sse2_fpu.inc
 include \macros\SmplMath\backends\x86_32_64.inc
 
-include \macros\SmplMath\fSlvW.inc
+include \macros\SmplMath\compounds.inc
 include \macros\SmplMath\SmplReg.inc
 include \macros\SmplMath\ForLp.inc
 include \macros\SmplMath\IfElseM.inc

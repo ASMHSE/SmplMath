@@ -18,7 +18,8 @@
         @WordSize equ 4
     endif
 
-    include ForLp.inc
+ include \masm32\macros\SmplMath\math.inc
+
 ; ¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤
 
 comment * -----------------------------------------------------

@@ -1,6 +1,6 @@
 
 ;/************************************************************
-; * This file is an extention of the SmplMath macros-system. *
+; * This file is an extension of the SmplMath macros-system. *
 ; *                                                          *
 ; *            Copyright by HSE, 2020-2022                   *
 ; *                                                          *
