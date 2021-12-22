@@ -1,6 +1,6 @@
 
 ;/************************************************************
-; * This file is an extension of the SmplMath macros-system. *
+; * This file is an extention of the SmplMath macros-system. *
 ; *                                                          *
 ; *            Copyright by HSE, 2020-2022                   *
 ; *                                                          *
@@ -125,7 +125,7 @@ endm
 ;         fSlvB res1 {{ BIT
 ;         fSlvB res1 }} item
 
-fSlvB macro Expression:=< >
+fSlvB macro Expression:=< >, AuxReg
 
     tk_dest 	TEXTEQU <>
     tk_exp  	TEXTEQU <>
@@ -168,10 +168,8 @@ fSlvB macro Expression:=< >
                 ELSE
                     tk_switch2 INSTR 1,<{}>,<&char>
                     IF tk_switch2 GT 0
-                        echo es doble
                         tk_is INSTR 1, tk_op, <&char>
                         IF tk_is EQ 1
-                            echo es igual
                             tk_op2 = 1
                         ELSE
                             .err A2052 invalid compound operator
@@ -198,30 +196,34 @@ fSlvB macro Expression:=< >
         tk_op3 TEXTEQU <shr>
     ENDIF
 
+             ifnb <&AuxReg>
+                  _eax textequ <&AuxReg> 
+              else
+                  if @WordSize eq 8
+                      _eax textequ <r10>
+                  else
+                      _eax textequ <eax>
+                  endif
+              endif
+
     IF (OPATTR(tk_dest)) and 00010000y ;; register
- ;%echo       tk_op3 tk_dest , tk_exp
         tk_op3 tk_dest , tk_exp
     ELSEIF (OPATTR(tk_dest)) and 00000100y ;; inmediate
         .err A2052 invalid bit operation on inmediate
     ELSE
-;%echo        mov eax, tk_dest 
-        mov eax, tk_dest 
+        mov _eax, tk_dest 
         IF tk_switch3 LT 4
-;%echo            tk_op3 eax , tk_exp
-            tk_op3 eax , tk_exp
+            tk_op3 _eax , tk_exp
         ELSE
             IF (OPATTR(tk_exp)) and 00000100y ;; inmediate
-;%echo                tk_op3 eax , tk_exp
-                tk_op3 eax , tk_exp
+                tk_op3 _eax , tk_exp
             ELSE
-%echo                mov ecx, tk_exp 
-%echo                tk_op3 eax , cl
                 mov ecx, tk_exp 
-                tk_op3 eax , cl
+                tk_op3 _eax , cl
             ENDIF
         ENDIF
-;%echo        mov tk_dest, eax
-        mov tk_dest, eax
+        mov tk_dest, _eax
     ENDIF
 endm
+
 

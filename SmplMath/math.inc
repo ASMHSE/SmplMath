@@ -3,7 +3,7 @@
 ; *                                                      *
 ; *          Copyright by qWord, 2011-2014               *
 ; *                                                      *
-; *            Modified by HSE, 2020-2021                *
+; *            Modified by HSE, 2020-2022                *
 ; *                                                      *
 ; *          SmplMath.Masm{at}gmx{dot}net                *
 ; *    http://sourceforge.net/projects/smplmath/         *
