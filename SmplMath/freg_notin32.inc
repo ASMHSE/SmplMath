@@ -40,4 +40,10 @@
             pop &reg
             push &reg
         endm 
-    endif
+       freg_pushad macro
+            pushad
+        endm 
+        freg_popad macro
+            popad
+        endm 
+     endif

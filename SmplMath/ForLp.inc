@@ -30,7 +30,7 @@ jmpLoop	macro FirstHalf, SecondHalf
 
 ForLp	macro	LCV:req, Start:req, Stop:req,AuxReg
 
-             inb <&AuxReg>
+             ifnb <&AuxReg>
                   _eax textequ <&AuxReg> 
               else
                   if @WordSize eq 8
@@ -47,7 +47,7 @@ $$For&LCV&	=	$$For&LCV& + 1
 		endif
 
 		mov	_eax , Start
-		mov	LCV, xax
+		mov	LCV, _eax
 
 		MakeLbl $$For&LCV&, %$$For&LCV&
 		mov	_eax , LCV
@@ -71,7 +71,7 @@ CutFor	macro	LCV:req
 		endm
 
 ForLp_df macro LCV:req, Start:req, Stop:req,AuxReg       ;; not including Stop ej: i < Stop
-             inb <&AuxReg>
+             ifnb <&AuxReg>
                   _eax textequ <&AuxReg> 
               else
                   if @WordSize eq 8
@@ -82,8 +82,8 @@ ForLp_df macro LCV:req, Start:req, Stop:req,AuxReg       ;; not including Stop e
               endif
 		mov _eax, Stop
 		dec _eax
-		mov LCV&_t, xax
-		ForLp	&LCV, &Start, LCV&_t
+		mov LCV&_t, _eax
+		ForLp	&LCV, &Start, LCV&_t, &AuxReg
 		endm
 
 ;######################################################
@@ -96,7 +96,7 @@ jgDoneN	macro FirstHalf, SecondHalf
 
 ForLpN	macro	LCV:req, Start:req, Stop:req, AuxReg
 
-              inb <&AuxReg>
+              ifnb <&AuxReg>
                   _eax textequ <&AuxReg> 
               else
                   if @WordSize eq 8
@@ -157,7 +157,16 @@ MakeLblR	macro FirstHalf, SecondHalf
 		endm
 
 jgDoneR	macro FirstHalf, SecondHalf
-		.if ( ah & FP_LESSTHAN )
+              ifdef __JWASM__
+                  .if ( ah & FP_LESSTHAN )
+              else
+                  if @WordSize eq 4
+        	        .if ( ah & FP_LESSTHAN )      ;Vasily macros don't understand this 
+                  else
+                      and ah, FP_LESSTHAN
+    		        .if ah {} 0
+                  endif
+              endif
 	          jmp &FirstHalf&&SecondHalf&
              .endif
 		endm

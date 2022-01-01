@@ -1,3 +1,8 @@
+30.12.2021
+            added:       - Pseudo pushad/popad registers (freg_pushad/freg_popad)
+                         - Pseudo peek (for registers) and peekv (for variables)
+            bugfix:      - typos in Loops
+
 20.12.2021
             change:      - Loops updated for different bitness, variable size and registers
                      

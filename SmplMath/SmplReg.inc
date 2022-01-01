@@ -452,4 +452,45 @@ freg_peekv macro var:REQ, reg
         endif
     endif
 endm
-
+freg_pushad macro
+    if @WordSize eq 4
+        freg_push EAX
+        freg_push ECX
+        freg_push EDX
+        freg_push EBX
+        freg_push ESP
+        freg_push EBP
+        freg_push ESI
+        freg_push EDI
+    else
+        freg_push RAX
+        freg_push RCX
+        freg_push RDX
+        freg_push RBX
+        freg_push RSP
+        freg_push RBP
+        freg_push RSI
+        freg_push RDI
+    endif
+endm
+freg_popad macro
+    if @WordSize eq 4
+        freg_pop EDI
+        freg_pop ESI
+        freg_pop EBP
+        freg_pop ESP
+        freg_pop EBX
+        freg_pop EDX
+        freg_pop ECX
+        freg_pop EAX
+    else
+        freg_pop RDI
+        freg_pop RSI
+        freg_pop RBP
+        freg_pop RSP
+        freg_pop RBX
+        freg_pop RDX
+        freg_pop RCX
+        freg_pop RAX
+    endif
+endm
