@@ -26,8 +26,8 @@ Some added macros facilitate programming:
 
   ### Complementary macros 
 
-     ___Loop___ and ___Compound operators__ macros make easy in a controled way programming some calculations. ___Pseudo push/pop___ facilitate translations 32-64 bits an allow dual bitness (See ObjAsm). ___Conditional flow___ macros solve some problems with floating point numbers comparisons and other early macro expansions.
+___Loop___ and ___Compound operators__ macros make easy in a controled way programming some calculations. ___Pseudo push/pop___ facilitate translations 32-64 bits an allow dual bitness (See ObjAsm). ___Conditional flow___ macros solve some problems with floating point numbers comparisons and other early macro expansions.
 
   ### Accesory macros 
 
-     These include some ___additional___ macros provided by qWord, and ___invoke___ macro modified fron Steve Hutchesson's Masm64 SDK.
+These include some ___additional___ macros provided by qWord, and ___invoke___ macro modified fron Steve Hutchesson's Masm64 SDK.
