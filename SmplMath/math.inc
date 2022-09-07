@@ -5,8 +5,7 @@
 ; *                                                      *
 ; *            Modified by HSE, 2020-2022                *
 ; *                                                      *
-; *          SmplMath.Masm{at}gmx{dot}net                *
-; *    http://sourceforge.net/projects/smplmath/         *
+; *       https://github.com/ASMHSE/SmplMath             *
 ; *                                                      *
 ; *  Further Copyright and Legal statements are located  *
 ; *  in the documentation (Documentation.pdf).           *
@@ -51,5 +50,7 @@ include \macros\SmplMath\compounds.inc
 include \macros\SmplMath\SmplReg.inc
 include \macros\SmplMath\ForLp.inc
 include \macros\SmplMath\IfElseM.inc
+include \macros\SmplMath\translation3264.inc
+
 
 LOAD_DEFAULT_BACKEND

@@ -9,7 +9,7 @@ Api=
 C1=0
 B1=
 M1=
-Path=C:\RadAsm3
+Path=D:\masm32\macros\SmplMathGit\SmplMath\examples\x64_Console
 [Make]
 Make=0
 0=Console Release,'/v "$R"',"$R.res",'/win64 "$C"',"$C.obj",'/SUBSYSTEM:CONSOLE /RELEASE /OUT:$O $C $M $R',"$C.exe",'',

@@ -24,6 +24,10 @@ jgDone	macro FirstHalf, SecondHalf
 		jg &FirstHalf&&SecondHalf&
 		endm
 
+jeDone	macro FirstHalf, SecondHalf
+		je &FirstHalf&&SecondHalf&
+		endm
+
 jmpLoop	macro FirstHalf, SecondHalf
 		jmp &FirstHalf&&SecondHalf&
 		endm
@@ -84,6 +88,33 @@ ForLp_df macro LCV:req, Start:req, Stop:req,AuxReg       ;; not including Stop e
 		dec _eax
 		mov LCV&_t, _eax
 		ForLp	&LCV, &Start, LCV&_t, &AuxReg
+		endm
+
+ForLpD	macro	LCV:req, Start:req, Stop:req, AuxReg
+
+             ifnb <&AuxReg>
+                  _eax textequ <&AuxReg> 
+              else
+                  if @WordSize eq 8
+                      _eax textequ <rax>
+                  else
+                      _eax textequ <eax>
+                  endif
+              endif
+
+		ifndef $$For&LCV&
+$$For&LCV&	=	0
+		else
+$$For&LCV&	=	$$For&LCV& + 1
+		endif
+
+		mov	_eax , Start
+		mov	LCV, _eax
+
+		MakeLbl $$For&LCV&, %$$For&LCV&
+		mov	_eax , LCV
+		cmp	_eax , Stop
+		jeDone $$Next&LCV&, %$$For&LCV&
 		endm
 
 ;######################################################

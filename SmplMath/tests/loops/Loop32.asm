@@ -73,6 +73,16 @@ main proc
     Next v1
     print "modified ascendent loop finished",13,10,13,10
 
+    mov sizeofarray, 4 
+    ForLpD v1, 0, sizeofarray, edx
+        .if edx == 1
+            CutFor v1
+        .endif
+        print str$(v1), 13, 10
+
+    Next v1
+    print "better modified ascendent loop finished",13,10,13,10
+
     ForLpN v2, 5, 0, cx
         .if cx == 3
             CutForN v2

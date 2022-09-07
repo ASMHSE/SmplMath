@@ -87,6 +87,15 @@ main proc
     Next v1
     conout "modified ascendent loop finished",lf,lf
 
+    mov sizeofarray, 4 
+    ForLpD v1, 0, sizeofarray, r13
+        .if r13 == 1
+            CutFor v1
+        .endif
+        conout str$(v1), lf
+
+    Next v1
+    conout "better modified ascendent loop finished",lf,lf
 
     ForLpN v2, 5, 0, cx
         .if cx == 3
