@@ -36,6 +36,11 @@ IFNDEF REAL8_BYTE
 	REAL8_BYTE typedef REAL8
 ENDIF
 
+IFNDEF OWORD_BYTE
+	OWORD_BYTE typedef OWORD
+ENDIF
+
+
 unique_reg_cntr = 0
 maximum_reg_cntr = 0
 counter_reg_cntr = 0
@@ -276,6 +281,8 @@ freg_push macro reg:REQ
             freg_bool_byte TEXTEQU @fregTLS_line_alloc(REAL4_BYTE)
         elseif TYPE(reg) eq QWORD
             freg_bool_byte TEXTEQU @fregTLS_line_alloc(REAL8_BYTE)
+        elseif TYPE(reg) eq OWORD
+            freg_bool_byte TEXTEQU @fregTLS_line_alloc(OWORD_BYTE)
         else
             if @WordSize eq 8
                 freg_bool_byte TEXTEQU @fregTLS_line_alloc(REAL8_BYTE)
@@ -293,6 +300,8 @@ freg_push macro reg:REQ
         mov dword ptr freg_bool_byte , reg
     elseif TYPE(reg) eq QWORD
         mov qword ptr freg_bool_byte , reg
+    elseif TYPE(reg) eq OWORD
+        movdqa oword ptr freg_bool_byte , reg
     else
         if @WordSize eq 8
             mov qword ptr freg_bool_byte , reg
@@ -317,6 +326,8 @@ freg_pop macro reg:REQ
             freg_bool_byte TEXTEQU @fregTLS_line_retrieve(REAL4_BYTE)
         elseif TYPE(reg) eq QWORD
             freg_bool_byte TEXTEQU @fregTLS_line_retrieve(REAL8_BYTE)
+        elseif TYPE(reg) eq OWORD
+            freg_bool_byte TEXTEQU @fregTLS_line_retrieve(OWORD_BYTE)
         else
             if @WordSize eq 8
                 freg_bool_byte TEXTEQU @fregTLS_line_retrieve(REAL8_BYTE)
@@ -331,9 +342,11 @@ freg_pop macro reg:REQ
     elseif TYPE(reg) eq WORD
         mov reg, word ptr freg_bool_byte
     elseif TYPE(reg) eq DWORD
-        mov reg,dword ptr freg_bool_byte
+        mov reg, dword ptr freg_bool_byte
     elseif TYPE(reg) eq QWORD
-        mov reg,qword ptr freg_bool_byte
+        mov reg, qword ptr freg_bool_byte
+    elseif TYPE(reg) eq OWORD
+        movdqa reg, oword ptr freg_bool_byte
     else
         if @WordSize eq 8
             mov reg,qword ptr freg_bool_byte
@@ -359,6 +372,8 @@ freg_peek macro reg:REQ
             freg_bool_byte TEXTEQU @fregTLS_line_access(REAL4_BYTE)
         elseif TYPE(reg) eq QWORD
             freg_bool_byte TEXTEQU @fregTLS_line_access(REAL8_BYTE)
+        elseif TYPE(reg) eq OWORD
+            freg_bool_byte TEXTEQU @fregTLS_line_access(OWORD_BYTE)
         else
             if @WordSize eq 8
                 freg_bool_byte TEXTEQU @fregTLS_line_access(REAL8_BYTE)
@@ -376,6 +391,8 @@ freg_peek macro reg:REQ
         mov reg,dword ptr freg_bool_byte
     elseif TYPE(reg) eq QWORD
         mov reg,qword ptr freg_bool_byte
+    elseif TYPE(reg) eq OWORD
+        movdqa reg,oword ptr freg_bool_byte
     else
         if @WordSize eq 8
             mov reg,qword ptr freg_bool_byte
@@ -452,6 +469,7 @@ freg_peekv macro var:REQ, reg
         endif
     endif
 endm
+
 freg_pushad macro
     if @WordSize eq 4
         freg_push EAX
@@ -473,6 +491,7 @@ freg_pushad macro
         freg_push RDI
     endif
 endm
+
 freg_popad macro
     if @WordSize eq 4
         freg_pop EDI

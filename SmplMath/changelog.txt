@@ -1,3 +1,6 @@
+11.10.2022
+            added:       - Pseudo push/pop XMM registers
+            
 05.09.2022
             added:       - ForLpD / Next : modified ascendent integer loop
                          - Helper macros to translate 32 to 64 bits 
