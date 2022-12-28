@@ -513,3 +513,175 @@ freg_popad macro
         freg_pop RAX
     endif
 endm
+
+; ——————————————————————————————————————————————————————————————————————————————————————————————————
+;
+; freg_PushAll, freg_PopAll, freg_PushAllRev and freg_PopAllRev 
+;                      are adaptations from
+;          PushAll, PopAll, PushAllRev and PopAllRev in
+
+; Title:      System.inc
+; Author:     G. Friedrich
+; Version:    C.1.0
+; Purpose:    ObjAsm collection of useful macros.
+; Notes:      Version C.1.0, October 2017
+;               - First release.
+
+; ObjAsm Homepage = http://objasm.x10host.com/
+; ObjAsm Development repository = https://github.com/ObjAsm
+; ObjAsm Online documentation = https://biterider.gitbook.io/objasm/
+
+; ——————————————————————————————————————————————————————————————————————————————————————————————————
+; Macro:      freg_PushAll
+; Purpose:    Push recursively all arguments on stack.
+; Arguments:  Arg1: List of arguments.
+; Returns:    Nothing.
+
+freg_PushAll macro ArgList:vararg
+  $$EaxUsed = FALSE
+  %for $$Arg, <ArgList>
+    ifnb <$$Arg>
+      $$UArg textequ $Upper($$Arg)
+      if $$EaxUsed ne FALSE
+        $$IsEax = FALSE
+        $$EaxPos InStr 1, $$UArg, <RAX>
+        if $$EaxPos ne 0
+           $$IsEax = TRUE
+          if $$EaxPos gt 1
+            if @InStr(1, %??WordChars, @SubStr(%$$UArg, $$EaxPos - 1, 1)) gt 0
+              $$IsEax = FALSE
+            endif
+          endif
+          if ( $$EaxPos ne 0 and $$EaxPos le @SizeStr(%$$UArg) - 3)
+            if @InStr(1, %??WordChars, @SubStr(%$$UArg, $$EaxPos + 3, 1)) gt 0
+              $$IsEax = FALSE
+            endif
+          endif
+        endif
+        if $$IsEax ne FALSE
+          .err <RAX register already in use.>
+          exitm
+        else
+            $$EaxPos InStr 1, $$UArg, <EAX>
+            if $$EaxPos ne 0
+               $$IsEax = TRUE
+              if $$EaxPos gt 1
+                if @InStr(1, %??WordChars, @SubStr(%$$UArg, $$EaxPos - 1, 1)) gt 0
+                  $$IsEax = FALSE
+                endif
+              endif
+              if ( $$EaxPos ne 0 and $$EaxPos le @SizeStr(%$$UArg) - 3)
+                if @InStr(1, %??WordChars, @SubStr(%$$UArg, $$EaxPos + 3, 1)) gt 0
+                  $$IsEax = FALSE
+                endif
+              endif
+            endif
+        endif
+        if $$IsEax ne FALSE
+          .err <EAX register already in use.>
+          exitm
+        else
+          $$EaxPos InStr 1, $$UArg, <AX>
+          if $$EaxPos ne 0
+            $$IsEax = TRUE
+            if $$EaxPos gt 1
+              if @InStr(1, %??WordChars, @SubStr(%$$UArg, $$EaxPos - 1, 1)) gt 0
+                $$IsEax = FALSE
+              endif
+            endif
+            if ($$EaxPos ne 0 and $$EaxPos le @SizeStr(%$$UArg) - 2)
+              if @InStr(1, %??WordChars, @SubStr(%$$UArg, $$EaxPos + 2, 1)) gt 0
+                $$IsEax = FALSE
+              endif
+            endif
+          endif
+        endif
+        if $$IsEax ne FALSE
+          .err <AX register already in use.>
+          exitm
+        else
+           $$EaxPos InStr 1, $$UArg, <AL>
+          if $$EaxPos ne 0
+             $$IsEax = TRUE
+            if $$EaxPos gt 1
+              if @InStr(1, %??WordChars, @SubStr(%$$UArg, $$EaxPos - 1, 1)) gt 0
+                $$IsEax = FALSE
+              endif
+            endif
+            if ($$EaxPos ne 0 and  $$EaxPos le @SizeStr(%$$UArg) - 2)
+              if @InStr(1, %??WordChars, @SubStr(%$$UArg, $$EaxPos + 2, 1)) gt 0
+                $$IsEax = FALSE
+              endif
+            endif
+          endif
+        endif
+        if $$IsEax ne FALSE
+          .err <AL register already in use.>
+          exitm
+        endif
+      endif
+
+      $$Pos1 InStr 1, $$UArg, <ADDR >
+      if $$Pos1 eq 1
+        $$Attributes = opattr(@SubStr($$Arg, $$Pos1 + 5))
+        if ($$Attributes eq (OAT_RELOCATABLE or OAT_NO_ERROR)) or \
+           ($$Attributes eq (OAT_RELOCATABLE or OAT_NO_ERROR or OAT_SS_RELATIVE))
+          $$EaxUsed = TRUE
+          lea xax, @SubStr($$Arg, 6)
+          freg_push xax
+        else
+          if @InStr(6, $$Arg, <[>)
+            $$EaxUsed = TRUE
+            lea xax, @SubStr($$Arg, 6)
+            freg_push xax
+          else
+            freg_push offset(@SubStr($$Arg, 6))
+          endif
+        endif
+      else
+        if $IsFloat($$Arg)
+          db 68h
+          REAL4 $$Arg                                   ;;push REAL4 value
+        else
+          freg_push $$Arg                                    ;;push one argument and repeat
+        endif
+      endif
+    endif
+  endm
+endm
+
+; ——————————————————————————————————————————————————————————————————————————————————————————————————
+; Macro:      freg_PopAll
+; Purpose:    Pop a list of arguments of the stack.
+; Arguments:  Arg1: List of arguments.
+; Returns:    Nothing.
+
+freg_PopAll macro ArgList:vararg
+  %for $$Arg, <ArgList>
+    freg_pop $$Arg                                           ;;push one argument and repeat
+  endm
+endm
+
+; ——————————————————————————————————————————————————————————————————————————————————————————————————
+; Macro:      freg_PushAllRev
+; Purpose:    Push all arguments on stack in reverse order.
+; Arguments:  Arg1: List of arguments.
+; Returns:    Nothing.
+
+freg_PushAllRev macro ArgList:vararg
+  freg_PushAll $ArgRev(ArgList)
+endm
+
+; ——————————————————————————————————————————————————————————————————————————————————————————————————
+; Macro:      freg_PopAllRev
+; Purpose:    Pop recursively all arguments on stack in reverse order.
+; Arguments:  Arg1: List of arguments.
+; Returns:    Nothing.
+
+freg_PopAllRev macro ArgList:vararg
+  $$ArgList textequ $ArgRev(ArgList)
+  %for $$Arg, <$$ArgList>
+    freg_pop $$Arg                                           ;;pop one argument and repeat
+  endm
+endm
+

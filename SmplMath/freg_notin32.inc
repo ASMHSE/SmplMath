@@ -46,4 +46,7 @@
         freg_popad macro
             popad
         endm 
+        fregTLS macro cual1:VARARG
+           exitm< SmplMathNotPresent : xword>
+        endm
      endif
