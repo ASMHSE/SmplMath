@@ -3,6 +3,7 @@
 [![](https://img.shields.io/badge/Assembler-MASM%206.14-brightgreen.svg?style=flat-square&logo=visual-studio-code&logoColor=white&colorB=5E0000)](http://www.masm32.com/download.htm) 
 [![](https://img.shields.io/badge/Assembler-UASM%20v2.52-green.svg?style=flat-square&logo=visual-studio-code&logoColor=white&colorB=1CC887)](http://www.terraspace.co.uk/uasm.html) 
 [![](https://img.shields.io/badge/Assembler-JWASM%20v2.15-green.svg?style=flat-square&logo=visual-studio-code&logoColor=white&colorB=C9931E)](https://github.com/Baron-von-Riedesel/JWasm) 
+[![](https://img.shields.io/badge/Assembler-ML64-blue.svg?style=flat-square&logo=visual-studio-code&logoColor=white&colorB=000093)](https://learn.microsoft.com/en-us/cpp/assembler/masm/masm-for-x64-ml64-exe) 
 
 The SmplMath macros system is a collection of MASM macros for evaluating mathematic expression developed by qWord. There is a whole bunch of macros for expression evaluation, comparison and FPU related topics.
 
