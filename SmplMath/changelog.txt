@@ -1,3 +1,7 @@
+04.04.2023  Version 2.0.3
+            added:      - @while/@break/@endw control flow
+                        - @dothis/@breakthis/@whilethis control flow
+
 11.10.2022
             added:       - Pseudo push/pop XMM registers
             
@@ -22,7 +26,7 @@
             added:       - macros64G.inc to "accs"
 
 03.12.2021
-            added:       - updated if/else macros from Mabdelouahab.
+            added:       - updated @if/@else/@endif macros from Mabdelouahab.
                          - example mabm2.asm to use this macros.
                          - r4IsNotNaN : macro to check (similar to r4IsValid but specific for NaN)
                          - added r8Is_NotNaN and r4Is_NotNaN for IfElse evaluations. 

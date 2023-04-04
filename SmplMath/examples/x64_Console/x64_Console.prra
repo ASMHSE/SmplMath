@@ -3,7 +3,7 @@ Version=3000
 [Project]
 Assembler=jWasm
 Group=2,-1,0,1,SmplMath example
-F1=-1,2,1,0,0,1204,346,0,x64_Console.asm
+F1=-1,2,1,0,0,1204,346,14,x64_Console.asm
 Open=0,1
 Api=
 C1=0
