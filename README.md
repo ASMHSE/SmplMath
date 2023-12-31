@@ -5,7 +5,7 @@
 [![](https://img.shields.io/badge/Assembler-JWASM%20v2.15-green.svg?style=flat-square&logo=visual-studio-code&logoColor=white&colorB=C9931E)](https://github.com/Baron-von-Riedesel/JWasm) 
 [![](https://img.shields.io/badge/Assembler-ML64-blue.svg?style=flat-square&logo=visual-studio-code&logoColor=white&colorB=000093)](https://learn.microsoft.com/en-us/cpp/assembler/masm/masm-for-x64-ml64-exe) 
 
-The SmplMath macros system is a collection of MASM macros for evaluating mathematic expression developed by qWord. There is a whole bunch of macros for expression evaluation, comparison and FPU related topics.
+The SmplMath macros system is a collection of MASM macros for evaluating mathematic expression developed by qWord. There are a whole bunch of macros for expression evaluation, comparison and FPU related topics.
 
 example:
 ```
@@ -23,17 +23,15 @@ example:
 ```
 Well tested for 32 bits with ___ML___, ___JWASM___, ___ASMC___ (-Znk option) and ___UASM32___.
 
-In 64 bits was tested with ___JWASM___ by qWord, and recently some test for ___ML64___ using Masm64 SDK (see [Masm32.com](http://masm32.com/board/index.php?board=53.0)).
+In 64 bits was tested with ___JWASM___ by qWord, and recently some testing for ___ML64___ using Masm64 SDK (see [Masm32.com](http://masm32.com/board/index.php?board=53.0)).
 
 
 ## Additional macros
 
-Some added macros facilitate programming:
-
   ### Complementary macros 
 
-___Loops___ and ___Compound operators___ macros make easy in a controled way programming some calculations. ___Pseudo push/pop___ facilitate translations 32-64 bits and allow dual bitness (See [ObjAsm-C.1](https://github.com/ObjAsm/ObjAsm-C.1)). ___Conditional flow___ macros solve some problems with floating point numbers comparisons and other early macro expansions.
+___Loops___ and ___Compound operators___ macros simplify in a controled way programming some calculations. ___Pseudo push/pop___ facilitate translations between 32 and 64 bits and allow dual bitness (See [ObjAsm-C.1](https://github.com/ObjAsm/ObjAsm-C.1)). ___Conditional flow___ macros solve some problems with floating point numbers comparisons and other early macro expansions.
 
   ### Accesory macros 
 
-These include some ___additional___ macros provided by qWord, and ___invoke___ macro modified from Steve Hutchesson's [Masm64 SDK](http://masm32.com/board/index.php?board=53.0).
+These include some ___additional___ macros provided by qWord, and an ___invoke___ macro modified from Steve Hutchesson's [Masm64 SDK](http://masm32.com/board/index.php?board=53.0).
