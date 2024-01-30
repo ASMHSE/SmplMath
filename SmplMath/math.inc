@@ -49,8 +49,7 @@ include \macros\SmplMath\backends\x86_32_64.inc
 include \macros\SmplMath\compounds.inc
 include \macros\SmplMath\SmplReg.inc
 include \macros\SmplMath\ForLp.inc
-include \macros\SmplMath\IfElseM.inc
+include \macros\SmplMath\FlowControl.inc
 include \macros\SmplMath\translation3264.inc
-
 
 LOAD_DEFAULT_BACKEND

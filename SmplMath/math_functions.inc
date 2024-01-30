@@ -29,6 +29,7 @@ comment *
     root2(x,a,b)         X   X          R4/8/10         a,b = +-(1,2,3,...) , result = x ^ (a/b)
     sqrt(x)              X   X   X      R[4/8]/10
     trunc(x)             X   X          R4/8/10 
+    ceil(x)              X   X          R4/8/10 
     mod(a,b)             X   X          R4/8/10 
     abs(x)               X   X   X      R[4/8]/10
     limit(x,max,min)     X   X   X      R[4/8]/10
@@ -47,17 +48,17 @@ comment *
 *
 
 SSE2_EXPD struct
-	xMax	REAL8	?
-	xMin	REAL8	?
-	r_ln2_0	REAL8	?
-	mln2_0	REAL8	?
-	f1		REAL8	?
-	f2		REAL8	?
-	plusINF	REAL8	?
-	NAN		REAL8	?
-	P		REAL8	4 dup (?)
-	mln2_1	REAL8	?
-	tbl		REAL8	0 dup (?)
+    xMax     REAL8	?
+    xMin     REAL8	?
+    r_ln2_0  REAL8	?
+    mln2_0   REAL8	?
+    f1       REAL8	?
+    f2       REAL8	?
+    plusINF  REAL8	?
+    NAN      REAL8	?
+    P        REAL8	4 dup (?)
+    mln2_1   REAL8	?
+    tbl      REAL8	0 dup (?)
 SSE2_EXPD ends
 
 EXTERNDEF fpu_const_r4_one		:REAL4
@@ -801,3 +802,19 @@ fslv_fnc_mod macro
 endm
 default_fnc_dscptr2 <mod>,nArgs=2,nRegs=1,fpu=-1,x64=-1
 
+fslv_fnc_ceil macro
+	IFE fslv_volatile_gprs AND FSVGPR_EAX
+		T_EXPR(<push eax>,<mov [rsp+8],rax>)
+	ENDIF
+	fstcw WORD ptr T_EXPR([esp-2],[rsp])
+	movzx eax,WORD ptr T_EXPR([esp-2],[rsp])
+	or eax,0800h
+	mov T_EXPR([esp-4],[rsp+2]),ax
+	fldcw T_EXPR([esp-4],[rsp+2])
+	frndint	
+	fldcw WORD ptr T_EXPR([esp-2],[rsp])
+	IFE fslv_volatile_gprs AND FSVGPR_EAX
+		T_EXPR(<pop eax>,<mov rax,[rsp+8]>)
+	ENDIF
+endm
+default_fnc_dscptr2 <ceil>,nArgs=1,fpu=-1,x64=-1
