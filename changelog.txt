@@ -1,3 +1,6 @@
+18.08.2024
+            added:      - fracc function (x86-32/64,FPU)
+
 30.01.2024
             added:       - ceil function (x86-32/64,FPU)
             bugfix:      - missing inclusion of FlowControl.inc in math.inc

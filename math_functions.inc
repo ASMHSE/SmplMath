@@ -30,6 +30,7 @@ comment *
     sqrt(x)              X   X   X      R[4/8]/10
     trunc(x)             X   X          R4/8/10 
     ceil(x)              X   X          R4/8/10 
+    fracc                X   X          R8             fraccional part of a real8
     mod(a,b)             X   X          R4/8/10 
     abs(x)               X   X   X      R[4/8]/10
     limit(x,max,min)     X   X   X      R[4/8]/10
@@ -818,3 +819,22 @@ fslv_fnc_ceil macro
 	ENDIF
 endm
 default_fnc_dscptr2 <ceil>,nArgs=1,fpu=-1,x64=-1
+
+fslv_fnc_fracc macro
+	IFE fslv_volatile_gprs AND FSVGPR_EAX
+		T_EXPR(<push eax>,<mov [rsp+8],rax>)
+	ENDIF
+	fstcw WORD ptr T_EXPR([esp-2],[rsp])
+	movzx eax,WORD ptr T_EXPR([esp-2],[rsp])
+	or ax,0c00h
+	mov T_EXPR([esp-4],[rsp+2]), ax
+	fldcw T_EXPR([esp-4],[rsp+2])
+       fld st(0)                                             ;;Duplicate st0
+	frndint	
+       fsubp st(1), st(0)                                    ;;Frac(x) = x - trunc(x)
+	fldcw WORD ptr T_EXPR([esp-2],[rsp])
+	IFE fslv_volatile_gprs AND FSVGPR_EAX
+		T_EXPR(<pop eax>,<mov rax,[rsp+8]>)
+	ENDIF
+endm
+default_fnc_dscptr2 <fracc>,nArgs=1,fpu=-1,x64=-1
