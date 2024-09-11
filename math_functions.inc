@@ -28,9 +28,12 @@ comment *
     root(x,n)            X   X          R4/8/10         n= +-(1,2,3,...)
     root2(x,a,b)         X   X          R4/8/10         a,b = +-(1,2,3,...) , result = x ^ (a/b)
     sqrt(x)              X   X   X      R[4/8]/10
-    trunc(x)             X   X          R4/8/10 
-    ceil(x)              X   X          R4/8/10 
-    fracc                X   X          R8/8/10        fraccional part of a real number
+    ceil(x)              X   X          R4/8/10        round to bigger integer
+    down(x)              X   X          R4/8/10        round to smaller integer
+    rnear(x)             X   X          R4/8/10        round to near integer
+    round(x)             X   X          R4/8/10        round to current FPU setting (near by default)
+    fracc(x)             X   X          R8/8/10        fraccional part of a real number
+    trunc(x)             X   X          R4/8/10        integer part of a real number
     mod(a,b)             X   X          R4/8/10 
     abs(x)               X   X   X      R[4/8]/10
     limit(x,max,min)     X   X   X      R[4/8]/10
@@ -820,6 +823,45 @@ fslv_fnc_ceil macro
 endm
 default_fnc_dscptr2 <ceil>,nArgs=1,fpu=-1,x64=-1
 
+fslv_fnc_down macro
+    IFE fslv_volatile_gprs AND FSVGPR_EAX
+        T_EXPR(<push eax>,<mov [rsp+8],rax>)
+    ENDIF
+    fstcw WORD ptr T_EXPR([esp-2],[rsp])
+    movzx eax,WORD ptr T_EXPR([esp-2],[rsp])
+    or eax,0400h
+    mov T_EXPR([esp-4],[rsp+2]),ax
+    fldcw T_EXPR([esp-4],[rsp+2])
+    frndint    
+    fldcw WORD ptr T_EXPR([esp-2],[rsp])
+    IFE fslv_volatile_gprs AND FSVGPR_EAX
+        T_EXPR(<pop eax>,<mov rax,[rsp+8]>)
+    ENDIF
+endm
+default_fnc_dscptr2 <down>,nArgs=1,fpu=-1,x64=-1
+
+fslv_fnc_rnear macro
+    IFE fslv_volatile_gprs AND FSVGPR_EAX
+        T_EXPR(<push eax>,<mov [rsp+8],rax>)
+    ENDIF
+    fstcw WORD ptr T_EXPR([esp-2],[rsp])
+    movzx eax,WORD ptr T_EXPR([esp-2],[rsp])
+    or eax,0000h
+    mov T_EXPR([esp-4],[rsp+2]),ax
+    fldcw T_EXPR([esp-4],[rsp+2])
+    frndint    
+    fldcw WORD ptr T_EXPR([esp-2],[rsp])
+    IFE fslv_volatile_gprs AND FSVGPR_EAX
+        T_EXPR(<pop eax>,<mov rax,[rsp+8]>)
+    ENDIF
+endm
+default_fnc_dscptr2 <rnear>,nArgs=1,fpu=-1,x64=-1
+
+fslv_fnc_round macro
+    frndint    
+endm
+default_fnc_dscptr2 <round>,nArgs=1,nRegs=1,fpu=-1,x64=-1
+
 fslv_fnc_fracc macro
     IFE fslv_volatile_gprs AND FSVGPR_EAX
         T_EXPR(<push eax>,<mov [rsp+8],rax>)
@@ -838,3 +880,4 @@ fslv_fnc_fracc macro
     ENDIF
 endm
 default_fnc_dscptr2 <fracc>,nArgs=1,fpu=-1,x64=-1
+
