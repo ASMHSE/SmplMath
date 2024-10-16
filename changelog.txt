@@ -1,3 +1,6 @@
+16.10.2024
+            bugfix:      - Removed "ptr" obliteration in TrimString macro
+
 11.09.2024
             added:      - round function (x86-32/64,FPU) -> round to current FPU setting (near by default)
             added:      - down function (x86-32/64,FPU)  -> round to smaller integer

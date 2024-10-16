@@ -1,7 +1,7 @@
 ;/************************************************************
 ; *   This file is a test of the SmplMath macros-system.     *
 ; *                                                          *
-; *            Copyright by HSE, 2020-2023                   *
+; *            Copyright by HSE, 2020-2024                   *
 ; *                                                          *
 ; *          https://github.com/ASMHSE/SmplMath/             *
 ; *                                                          *
@@ -82,6 +82,7 @@
 
     TrimString macro string___
         LOCAL ?Ltmp_string___,Ltmp_string___,Ltmp_Char,L_TabPos,L_SpcPos
+        LOCAL L_ComparOperation,firstpart,secondpart         ; Remove ptr obliteration        
 
         ?Ltmp_string___ TEXTEQU <string___>
         Ltmp_string___  TEXTEQU <>
@@ -98,6 +99,25 @@
                 Ltmp_string___ TEXTEQU Ltmp_string___,<___>
             ENDIF
         ENDM
+
+        ; Remove ptr obliteration        
+        repeat 2        
+        L_ComparOperation  	INSTR 1,Ltmp_string___, <___ptr___>
+        IF L_ComparOperation
+            firstpart SUBSTR Ltmp_string___,1, L_ComparOperation-1
+            secondpart SUBSTR Ltmp_string___,L_ComparOperation+9
+            Ltmp_string___ TEXTEQU firstpart, < ptr >,secondpart
+        ENDIF
+        endm
+        repeat 2    
+        L_ComparOperation  	INSTR 1,Ltmp_string___, <___ptr>
+        IF L_ComparOperation
+            firstpart SUBSTR Ltmp_string___,1, L_ComparOperation-1
+            secondpart SUBSTR Ltmp_string___,L_ComparOperation+6
+            Ltmp_string___ TEXTEQU firstpart, < ptr >,secondpart
+        ENDIF
+        endm
+
         EXITM <Ltmp_string___>
     endm
 
