@@ -111,7 +111,7 @@
       .data
         pbuf dq buffer
       .code
-      invoke vc__i64toa,value,pbuf,10
+      invoke vc__ui64toa,value,pbuf,10
       EXITM <pbuf>
     ENDM
 
@@ -126,7 +126,7 @@
       .data
         pbuf dq buffer
       .code
-      invoke vc__ltoa,number,pbuf,10
+      invoke vc__i64toa,number,pbuf,10
       EXITM <pbuf>
     ENDM
 
