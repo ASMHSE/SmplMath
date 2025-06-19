@@ -20,33 +20,35 @@
 ;  include \masm32\macros\SmplMath\freg_notin32.inc
   
     if @WordSize eq 4
-        freg_push macro reg
+        _push macro reg
             push &reg
         endm 
-        freg_pop macro reg
+        _pop macro reg
             pop &reg
         endm 
-        freg_peek macro reg
-            pop &reg
-            push &reg
-        endm 
-        freg_pushv macro reg
-            push &reg
-        endm 
-        freg_popv macro reg
-            pop &reg
-        endm 
-        freg_peekv macro reg
+        _peek macro reg
             pop &reg
             push &reg
         endm 
-       freg_pushad macro
+        _pushv macro reg, optional
+            push &reg
+        endm 
+        _popv macro reg, optional
+            pop &reg
+        endm 
+        _peekv macro reg, optional
+            pop &reg
+            push &reg
+        endm 
+        _pushad macro
             pushad
         endm 
-        freg_popad macro
+        _popad macro
             popad
+        endm
+        _correction macro number
         endm 
         fregTLS macro cual1:VARARG
-           exitm< SmplMathNotPresent : xword>
+           exitm<SmplMathNotPresent : XWORD>
         endm
      endif

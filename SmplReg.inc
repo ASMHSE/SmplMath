@@ -70,7 +70,7 @@ set_previous_reglbl macro
 endm
 
 @fregTLS_warning macro
-    %echo @FileCur: WARNING: code not thread save: line @CatStr(%@Line)
+    %echo @FileCur: WARNING: reg storage not thread save: line @CatStr(%@Line)
 endm
 
 fregTLS_curr_line = -1
@@ -247,13 +247,13 @@ set_previous_reglbl macro; name:req
     EXITM
 endm
 
-freg_correction macro val1:req
+_correction macro val1:req
 	freg_tls_curr_used = freg_tls_curr_used &val1 *@WordSize
     EXITM
 endm
 ;------------------------------------------------------------------------------
 
-freg_push macro reg:REQ
+_push macro reg:REQ
     IFNDEF freg_line
 	freg_line = @Line
     ENDIF
@@ -312,7 +312,7 @@ freg_push macro reg:REQ
     endif
 endm
 
-freg_pop macro reg:REQ
+_pop macro reg:REQ
 
     IFE @freg_TLS?()
         freg_bool_byte TEXTEQU get_last_reglbl(<freg_bool_byte_>)
@@ -358,7 +358,7 @@ freg_pop macro reg:REQ
 endm
 
 
-freg_peek macro reg:REQ
+_peek macro reg:REQ
 
     IFE @freg_TLS?()
         freg_bool_byte TEXTEQU get_last_reglbl(<freg_bool_byte_>)
@@ -425,100 +425,119 @@ fregTLS macro name:=<freg_tls>,cb:=<4*@WordSize>
 	ENDIF
 endm
 
-freg_pushv macro var:REQ, reg
+_pushv macro var:REQ, reg
     ifnb <reg>
         mov  &reg, &var
-        freg_push &reg
+        _push &reg
     else
         if @WordSize eq 4
             mov eax, &var
-            freg_push eax
+            _push eax
         else
             mov r10, &var
-            freg_push r10
+            _push r10
         endif
     endif
 endm
 
-freg_popv macro var:REQ, reg
+_popv macro var:REQ, reg
     ifnb <reg>
-        freg_pop &reg
+        _pop &reg
         mov &var, &reg
     else
         if @WordSize eq 4
-            freg_pop eax
+            _pop eax
             mov &var, eax
         else
-            freg_pop r10
+            _pop r10
             mov &var, r10
         endif
     endif
 endm
 
-freg_peekv macro var:REQ, reg
+_peekv macro var:REQ, reg
     ifnb <reg>
-        freg_peek &reg
+        _peek &reg
         mov &var, &reg
     else
         if @WordSize eq 4
-            freg_peek eax
+            _peek eax
             mov &var, eax
         else
-            freg_peek r10
+            _peek r10
             mov &var, r10
         endif
     endif
 endm
 
-freg_pushad macro
+_pushad macro specific
     if @WordSize eq 4
-        freg_push EAX
-        freg_push ECX
-        freg_push EDX
-        freg_push EBX
-        freg_push ESP
-        freg_push EBP
-        freg_push ESI
-        freg_push EDI
+        _push EAX
+        _push ECX
+        _push EDX
+        _push EBX
+        _push ESP
+        _push EBP
+        _push ESI
+        _push EDI
     else
-        freg_push RAX
-        freg_push RCX
-        freg_push RDX
-        freg_push RBX
-        freg_push RSP
-        freg_push RBP
-        freg_push RSI
-        freg_push RDI
+        _push RAX
+        _push RCX
+        _push RDX
+        _push RBX
+        _push RSP
+        _push RBP
+        _push RSI
+        _push RDI
+        ifidn <specific>,<64>
+	        _push R8
+	        _push R9
+	        _push R10
+	        _push R11
+	        _push R12
+	        _push R13
+	        _push R14
+	        _push R15
+        endif
     endif
 endm
 
-freg_popad macro
+_popad macro specific
     if @WordSize eq 4
-        freg_pop EDI
-        freg_pop ESI
-        freg_pop EBP
-        freg_pop ESP
-        freg_pop EBX
-        freg_pop EDX
-        freg_pop ECX
-        freg_pop EAX
+        _pop EDI
+        _pop ESI
+        _pop EBP
+        _pop ESP
+        _pop EBX
+        _pop EDX
+        _pop ECX
+        _pop EAX
     else
-        freg_pop RDI
-        freg_pop RSI
-        freg_pop RBP
-        freg_pop RSP
-        freg_pop RBX
-        freg_pop RDX
-        freg_pop RCX
-        freg_pop RAX
+        ifidn <specific>,<64>
+	        _pop R15
+	        _pop R14
+	        _pop R13
+	        _pop R12
+	        _pop R11
+	        _pop R10
+	        _pop R9
+	        _pop R8
+        endif
+        _pop RDI
+        _pop RSI
+        _pop RBP
+        _pop RSP
+        _pop RBX
+        _pop RDX
+        _pop RCX
+        _pop RAX
     endif
 endm
 
 ; ——————————————————————————————————————————————————————————————————————————————————————————————————
 ;
-; freg_PushAll, freg_PopAll, freg_PushAllRev and freg_PopAllRev 
-;                      are adaptations from
-;          PushAll, PopAll, PushAllRev and PopAllRev in
+; _PushAll, _PopAll, _PushAllRev and _PopAllRev are adaptations from
+; PushAll, PopAll, PushAllRev and PopAllRev in
 
 ; Title:      System.inc
 ; Author:     G. Friedrich
@@ -532,12 +551,12 @@ endm
 ; ObjAsm Online documentation = https://biterider.gitbook.io/objasm/
 
 ; ——————————————————————————————————————————————————————————————————————————————————————————————————
-; Macro:      freg_PushAll
+; Macro:      _PushAll
 ; Purpose:    Push recursively all arguments on stack.
 ; Arguments:  Arg1: List of arguments.
 ; Returns:    Nothing.
 
-freg_PushAll macro ArgList:vararg
+_PushAll macro ArgList:vararg
   $$EaxUsed = FALSE
   %for $$Arg, <ArgList>
     ifnb <$$Arg>
@@ -628,14 +647,14 @@ freg_PushAll macro ArgList:vararg
            ($$Attributes eq (OAT_RELOCATABLE or OAT_NO_ERROR or OAT_SS_RELATIVE))
           $$EaxUsed = TRUE
           lea xax, @SubStr($$Arg, 6)
-          freg_push xax
+          _push xax
         else
           if @InStr(6, $$Arg, <[>)
             $$EaxUsed = TRUE
             lea xax, @SubStr($$Arg, 6)
-            freg_push xax
+            _push xax
           else
-            freg_push offset(@SubStr($$Arg, 6))
+            _push offset(@SubStr($$Arg, 6))
           endif
         endif
       else
@@ -643,7 +662,7 @@ freg_PushAll macro ArgList:vararg
           db 68h
           REAL4 $$Arg                                   ;;push REAL4 value
         else
-          freg_push $$Arg                                    ;;push one argument and repeat
+          _push $$Arg                                    ;;push one argument and repeat
         endif
       endif
     endif
@@ -651,37 +670,38 @@ freg_PushAll macro ArgList:vararg
 endm
 
 ; ——————————————————————————————————————————————————————————————————————————————————————————————————
-; Macro:      freg_PopAll
+; Macro:      _PopAll
 ; Purpose:    Pop a list of arguments of the stack.
 ; Arguments:  Arg1: List of arguments.
 ; Returns:    Nothing.
 
-freg_PopAll macro ArgList:vararg
+_PopAll macro ArgList:vararg
   %for $$Arg, <ArgList>
-    freg_pop $$Arg                                           ;;push one argument and repeat
+    _pop $$Arg                                           ;;push one argument and repeat
   endm
 endm
 
 ; ——————————————————————————————————————————————————————————————————————————————————————————————————
-; Macro:      freg_PushAllRev
+; Macro:      _PushAllRev
 ; Purpose:    Push all arguments on stack in reverse order.
 ; Arguments:  Arg1: List of arguments.
 ; Returns:    Nothing.
 
-freg_PushAllRev macro ArgList:vararg
-  freg_PushAll $ArgRev(ArgList)
+_PushAllRev macro ArgList:vararg
+  _PushAll $ArgRev(ArgList)
 endm
 
 ; ——————————————————————————————————————————————————————————————————————————————————————————————————
-; Macro:      freg_PopAllRev
+; Macro:      _PopAllRev
 ; Purpose:    Pop recursively all arguments on stack in reverse order.
 ; Arguments:  Arg1: List of arguments.
 ; Returns:    Nothing.
 
-freg_PopAllRev macro ArgList:vararg
+_PopAllRev macro ArgList:vararg
   $$ArgList textequ $ArgRev(ArgList)
   %for $$Arg, <$$ArgList>
-    freg_pop $$Arg                                           ;;pop one argument and repeat
+    _pop $$Arg                                           ;;pop one argument and repeat
   endm
 endm
+
 
