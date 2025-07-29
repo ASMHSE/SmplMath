@@ -21,9 +21,11 @@ example:
                      / (1.0 +  ( KAaPbB /  cAa1))
     .endif
 ```
-Well tested for 32 bits with ___ML___, ___JWASM___, ___ASMC___ (-Znk option) and ___UASM32___.
+Well tested for 32 bits with ___ML___, ___JWASM___, ___ASMC___ (-Znk option until 2.28) and ___UASM___.
 
-In 64 bits was tested with ___JWASM___ by qWord, and recently some testing for ___ML64___ using Masm64 SDK (see [Masm32.com](http://masm32.com/board/index.php?board=53.0)).
+In 64 bits was tested with ___JWASM___ by qWord, and recently some testing for ___ML64___ using Masm64 SDK (see [Masm32.com](http://masm32.com/board/index.php?board=53.0)). 
+
+Currently most projects are Neutral Bitness (same code for 32 and 64 bits) with ___UASM___.
 
 
 ## Additional macros
