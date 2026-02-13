@@ -40,10 +40,10 @@
             pop &reg
             push &reg
         endm 
-        _pushad macro
+        _pushad macro optional
             pushad
         endm 
-        _popad macro
+        _popad macro optional
             popad
         endm
         _correction macro number
