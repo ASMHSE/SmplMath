@@ -1,3 +1,7 @@
+17.02.2026
+            bugfix:      - Corrected 64 bit problem in trunc function and others that used same schema
+                         (round, near, down, ceil, mod and fracc).
+
 16.10.2024
             bugfix:      - Removed "ptr" obliteration in TrimString macro
 

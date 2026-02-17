@@ -117,18 +117,18 @@ ELSE
     .err <[#MF1]only x86-32 and x86-64 supported>
 ENDIF
     
-FNCD_VERSION            EQU 1
-FNCD_NARGS            EQU 2
-FNCD_NREGS            EQU 4          ; number of additional used registers. param1 = combination of FSIS_FPU/SSE2/....
-FNCD_X32            EQU 8   ;
-FNCD_X64            EQU 16     
-FNCD_ISTCK            EQU 32           ; function supports the fslv_fnc_&FncName& macro 
-FNCD_IREG            EQU 128    ; function supports the fslv_fnc_ireg_&FncName& macro
-FNCD_INSTR_SET        EQU 512    ; function has a implementation for returned instruction sets
+FNCD_VERSION           EQU 1
+FNCD_NARGS             EQU 2
+FNCD_NREGS             EQU 4   ; number of additional used registers. param1 = combination of FSIS_FPU/SSE2/....
+FNCD_X32               EQU 8   ;
+FNCD_X64               EQU 16    
+FNCD_ISTCK             EQU 32   ; function supports the fslv_fnc_&FncName& macro 
+FNCD_IREG              EQU 128  ; function supports the fslv_fnc_ireg_&FncName& macro
+FNCD_INSTR_SET         EQU 512  ; function has a implementation for returned instruction sets
                                 ; Return: a combination of the FSIS_xxx-flags that indicates the used instruction sets (SSE2, SSE3, SSSE3, SSE4.1, SSE4.2, SSE4.A, AVX, CVT16, FMA3, XOP)
-FNCD_TST_LCL_TYPES        EQU 1024; Check if the function supports the types described by fslv_lcl_real_type and fslv_lcl_int_type
+FNCD_TST_LCL_TYPES     EQU 1024 ; Check if the function supports the types described by fslv_lcl_real_type and fslv_lcl_int_type
                                 ; Return: none zero, if function has a implementation for the local type settings.
-FNCD_IREG_RECORD_SIG    EQU 2048; place the macro call in a seperated code segment, record the signature and and reuse the recorded code if the signature of furhter function calls matchs.
+FNCD_IREG_RECORD_SIG   EQU 2048 ; place the macro call in a seperated code segment, record the signature and and reuse the recorded code if the signature of furhter function calls matchs.
                                 ; The Signature consist of: register names and their order in argument list, free registers, instruction set and local type settings
                                 ; This flags requires that FNCD_NREGS returns valid inforamtion.
 
@@ -767,21 +767,25 @@ endm
 default_fnc_dscptr2 <acos>,nArgs=1,nRegs=1,fpu=-1,x64=-1
 
 fslv_fnc_trunc macro
-    IFE fslv_volatile_gprs AND FSVGPR_EAX
-        T_EXPR(<push eax>,<mov [rsp+8],rax>)
-    ENDIF
-    fstcw WORD ptr T_EXPR([esp-2],[rsp])
-    movzx eax,WORD ptr T_EXPR([esp-2],[rsp])
-    or eax,0c00h
-    mov T_EXPR([esp-4],[rsp+2]),ax
-    fldcw T_EXPR([esp-4],[rsp+2])
-    frndint    
-    fldcw WORD ptr T_EXPR([esp-2],[rsp])
-    IFE fslv_volatile_gprs AND FSVGPR_EAX
-        T_EXPR(<pop eax>,<mov rax,[rsp+8]>)
+    IF fslv_lcl_real_type EQ 16
+        call rr_trunc
+    ELSE    
+        IFE fslv_volatile_gprs AND FSVGPR_EAX
+            T_EXPR(<push eax>,push rax>)
+        ENDIF
+        fstcw WORD ptr T_EXPR([esp-2],[rsp-2])
+        movzx eax,WORD ptr T_EXPR([esp-2],[rsp-2])
+        or eax,0c00h
+        mov T_EXPR([esp-4],[rsp-4]),ax
+        fldcw T_EXPR([esp-4],[rsp-4])
+        frndint    
+        fldcw WORD ptr T_EXPR([esp-2],[rsp-4])
+        IFE fslv_volatile_gprs AND FSVGPR_EAX
+            T_EXPR(<pop eax>,<pop rax>)
+        ENDIF
     ENDIF
 endm
-default_fnc_dscptr2 <trunc>,nArgs=1,fpu=-1,x64=-1
+default_fnc_dscptr2 <trunc>,nArgs=1,fpu=-1,x64=-1,rr=-1
 
 ;mod(x,y) = x mod y
 fslv_fnc_mod macro
@@ -789,73 +793,77 @@ fslv_fnc_mod macro
     fxch
     fld st
     IFE fslv_volatile_gprs AND FSVGPR_EAX
-        T_EXPR(<push eax>,<mov [rsp+8],rax>)
+        T_EXPR(<push eax>,<push rax>)
     ENDIF
-    fstcw WORD ptr T_EXPR([esp-2],[rsp])
-    movzx eax,WORD ptr T_EXPR([esp-2],[rsp])
+    fstcw WORD ptr T_EXPR([esp-2],[rsp-2])
+    movzx eax,WORD ptr T_EXPR([esp-2],[rsp-2])
     or eax,0c00h
-    mov T_EXPR([esp-4],[rsp+4]),ax
-    fldcw T_EXPR([esp-4],[rsp+4])
+    mov T_EXPR([esp-4],[rsp-4]),ax
+    fldcw T_EXPR([esp-4],[rsp-4])
     frndint    
-    fldcw WORD ptr T_EXPR([esp-2],[rsp])
+    fldcw WORD ptr T_EXPR([esp-2],[rsp-2])
     IFE fslv_volatile_gprs AND FSVGPR_EAX
-        T_EXPR(<pop eax>,<mov rax,[rsp+8]>)
+        T_EXPR(<pop eax>,<pop rax>)
     ENDIF
     fsubp st(1),st
     fmulp st(1),st
 endm
 default_fnc_dscptr2 <mod>,nArgs=2,nRegs=1,fpu=-1,x64=-1
 
-fslv_fnc_ceil macro
-    IFE fslv_volatile_gprs AND FSVGPR_EAX
-        T_EXPR(<push eax>,<mov [rsp+8],rax>)
-    ENDIF
-    fstcw WORD ptr T_EXPR([esp-2],[rsp])
-    movzx eax,WORD ptr T_EXPR([esp-2],[rsp])
-    or eax,0800h
-    mov T_EXPR([esp-4],[rsp+2]),ax
-    fldcw T_EXPR([esp-4],[rsp+2])
-    frndint    
-    fldcw WORD ptr T_EXPR([esp-2],[rsp])
-    IFE fslv_volatile_gprs AND FSVGPR_EAX
-        T_EXPR(<pop eax>,<mov rax,[rsp+8]>)
-    ENDIF
-endm
-default_fnc_dscptr2 <ceil>,nArgs=1,fpu=-1,x64=-1
-
 fslv_fnc_down macro
     IFE fslv_volatile_gprs AND FSVGPR_EAX
-        T_EXPR(<push eax>,<mov [rsp+8],rax>)
+        T_EXPR(<push eax>,<push rax>)
     ENDIF
-    fstcw WORD ptr T_EXPR([esp-2],[rsp])
-    movzx eax,WORD ptr T_EXPR([esp-2],[rsp])
+    fstcw WORD ptr T_EXPR([esp-2],[rsp-2])
+    movzx eax,WORD ptr T_EXPR([esp-2],[rsp-2])
     or eax,0400h
-    mov T_EXPR([esp-4],[rsp+2]),ax
-    fldcw T_EXPR([esp-4],[rsp+2])
+    mov T_EXPR([esp-4],[rsp-4]),ax
+    fldcw T_EXPR([esp-4],[rsp-4])
     frndint    
-    fldcw WORD ptr T_EXPR([esp-2],[rsp])
+    fldcw WORD ptr T_EXPR([esp-2],[rsp-2])
     IFE fslv_volatile_gprs AND FSVGPR_EAX
-        T_EXPR(<pop eax>,<mov rax,[rsp+8]>)
+        T_EXPR(<pop eax>,<pop rax>)
     ENDIF
 endm
 default_fnc_dscptr2 <down>,nArgs=1,fpu=-1,x64=-1
 
 fslv_fnc_rnear macro
     IFE fslv_volatile_gprs AND FSVGPR_EAX
-        T_EXPR(<push eax>,<mov [rsp+8],rax>)
+        T_EXPR(<push eax>,<push rax>)
     ENDIF
-    fstcw WORD ptr T_EXPR([esp-2],[rsp])
-    movzx eax,WORD ptr T_EXPR([esp-2],[rsp])
+    fstcw WORD ptr T_EXPR([esp-2],[rsp-2])
+    movzx eax,WORD ptr T_EXPR([esp-2],[rsp-2])
     or eax,0000h
-    mov T_EXPR([esp-4],[rsp+2]),ax
-    fldcw T_EXPR([esp-4],[rsp+2])
+    mov T_EXPR([esp-4],[rsp-4]),ax
+    fldcw T_EXPR([esp-4],[rsp-4])
     frndint    
-    fldcw WORD ptr T_EXPR([esp-2],[rsp])
+    fldcw WORD ptr T_EXPR([esp-2],[rsp-4])
     IFE fslv_volatile_gprs AND FSVGPR_EAX
-        T_EXPR(<pop eax>,<mov rax,[rsp+8]>)
+        T_EXPR(<pop eax>,<pop rax>)
     ENDIF
 endm
 default_fnc_dscptr2 <rnear>,nArgs=1,fpu=-1,x64=-1
+
+fslv_fnc_ceil macro
+    IF fslv_lcl_real_type EQ 16
+        call rr_ceil
+    ELSE    
+        IFE fslv_volatile_gprs AND FSVGPR_EAX
+            T_EXPR(<push eax>,<push rax>)
+        ENDIF
+        fstcw WORD ptr T_EXPR([esp-2],[rsp-2])
+        movzx eax,WORD ptr T_EXPR([esp-2],[rsp-2])
+        or eax,0800h
+        mov T_EXPR([esp-4],[rsp-4]),ax
+        fldcw T_EXPR([esp-4],[rsp-4])
+        frndint    
+        fldcw WORD ptr T_EXPR([esp-2],[rsp-2])
+        IFE fslv_volatile_gprs AND FSVGPR_EAX
+            T_EXPR(<pop eax>,<pop rax>)
+        ENDIF
+    ENDIF
+endm
+default_fnc_dscptr2 <ceil>,nArgs=1,fpu=-1,x64=-1,rr=-1
 
 fslv_fnc_round macro
     frndint    
@@ -864,19 +872,19 @@ default_fnc_dscptr2 <round>,nArgs=1,nRegs=1,fpu=-1,x64=-1
 
 fslv_fnc_fracc macro
     IFE fslv_volatile_gprs AND FSVGPR_EAX
-        T_EXPR(<push eax>,<mov [rsp+8],rax>)
+        T_EXPR(<push eax>,<push rax>)
     ENDIF
-    fstcw WORD ptr T_EXPR([esp-2],[rsp])
-    movzx eax,WORD ptr T_EXPR([esp-2],[rsp])
+    fstcw WORD ptr T_EXPR([esp-2],[rsp-2])
+    movzx eax,WORD ptr T_EXPR([esp-2],[rsp-2])
     or ax,0c00h
-    mov T_EXPR([esp-4],[rsp+2]), ax
-    fldcw T_EXPR([esp-4],[rsp+2])
+    mov T_EXPR([esp-4],[rsp-4]), ax
+    fldcw T_EXPR([esp-4],[rsp-4])
        fld st(0)                                             ;;Duplicate st0
-    frndint    
+       frndint    
        fsubp st(1), st(0)                                    ;;fraxc(x) = x - trunc(x)
-    fldcw WORD ptr T_EXPR([esp-2],[rsp])
+    fldcw WORD ptr T_EXPR([esp-2],[rsp-2])
     IFE fslv_volatile_gprs AND FSVGPR_EAX
-        T_EXPR(<pop eax>,<mov rax,[rsp+8]>)
+        T_EXPR(<pop eax>,<pop rax>)
     ENDIF
 endm
 default_fnc_dscptr2 <fracc>,nArgs=1,fpu=-1,x64=-1
