@@ -79,23 +79,23 @@ EXTERNDEF fpu_const_r8_d2r      :REAL8
 EXTERNDEF fpu_const_r4_d2r      :REAL4
 EXTERNDEF sse2_sd_neg_msk       :OWORD
 EXTERNDEF sse2_ss_neg_msk       :OWORD
-EXTERNDEF sse2_ss_one        :REAL4
-EXTERNDEF sse2_sd_one        :REAL8
-EXTERNDEF sse2_sd_abs_msk        :OWORD
-EXTERNDEF sse2_ss_abs_msk        :OWORD
+EXTERNDEF sse2_ss_one           :REAL4
+EXTERNDEF sse2_sd_one           :REAL8
+EXTERNDEF sse2_sd_abs_msk       :OWORD
+EXTERNDEF sse2_ss_abs_msk       :OWORD
 EXTERNDEF sse2_sd_pi            :REAL8
 EXTERNDEF sse2_ss_pi            :REAL4
-EXTERNDEF sse2_sd_mpi        :REAL8
-EXTERNDEF sse2_ss_mpi        :REAL4
-EXTERNDEF sse2_ExpD            :SSE2_EXPD
-EXTERNDEF sse2_log2sd_cmp1        :REAL8
-EXTERNDEF sse2_log2sd_cmp2        :REAL8
+EXTERNDEF sse2_sd_mpi           :REAL8
+EXTERNDEF sse2_ss_mpi           :REAL4
+EXTERNDEF sse2_ExpD             :SSE2_EXPD
+EXTERNDEF sse2_log2sd_cmp1      :REAL8
+EXTERNDEF sse2_log2sd_cmp2      :REAL8
 EXTERNDEF sse2_log2sd_msk_1     :REAL8
 EXTERNDEF sse2_log2sd_m1        :REAL8
 EXTERNDEF sse2_log2sd_msk_2     :REAL8
-EXTERNDEF sse2_log2sd_128        :REAL8
-EXTERNDEF sse2_log2sd_P        :REAL8
-EXTERNDEF sse2_log2sd_tbl        :REAL8
+EXTERNDEF sse2_log2sd_128       :REAL8
+EXTERNDEF sse2_log2sd_P         :REAL8
+EXTERNDEF sse2_log2sd_tbl       :REAL8
 
 IF @WordSize EQ 4
     fpu_st1_pow_st0 proto stdcall
@@ -181,22 +181,22 @@ endm
 ; nRegs=(flags)::<list>
 default_fnc_dscptr2 macro FncName:req,attributes:VARARG
     
-    dfs2_v = 2
-    dfs2_nRegs = -1
-    dfs2_nArgs = 1
-    dfs2_IStck = -1
-    dfs2_IReg = 0
-    dfs2_x32 = -1
-    dfs2_x64 = 0
-    dfs2_is = 0
-    dfs2_nr_r4 = -1
-    dfs2_nr_r8 = -1
-    dfs2_nr_r10 = -1
-    dfs2_nXR_r4 = -1
-    dfs2_nXR_r8 = -1
-    dfs2_IRegSig = 0
-    dfs2_rt TEXTEQU <>
-    dfs2_it TEXTEQU <>
+    dfs2_v       =  2
+    dfs2_nRegs   = -1
+    dfs2_nArgs   =  1
+    dfs2_IStck   = -1
+    dfs2_IReg    =  0
+    dfs2_x32     = -1
+    dfs2_x64     =  0
+    dfs2_is      =  0
+    dfs2_nr_r4   = -1
+    dfs2_nr_r8   = -1
+    dfs2_nr_r10  = -1
+    dfs2_nXR_r4  = -1
+    dfs2_nXR_r8  = -1
+    dfs2_IRegSig =  0
+    dfs2_rt  TEXTEQU <>
+    dfs2_it  TEXTEQU <>
     dfs2_nrm TEXTEQU <>
     
     FOR arg1,<attributes>
@@ -771,7 +771,7 @@ fslv_fnc_trunc macro
         call rr_trunc
     ELSE    
         IFE fslv_volatile_gprs AND FSVGPR_EAX
-            T_EXPR(<push eax>,push rax>)
+            T_EXPR(<push eax>,<push rax>)
         ENDIF
         fstcw WORD ptr T_EXPR([esp-2],[rsp-2])
         movzx eax,WORD ptr T_EXPR([esp-2],[rsp-2])
