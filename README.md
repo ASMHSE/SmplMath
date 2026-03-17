@@ -23,7 +23,7 @@ example:
 ```
 Well tested for 32 bits with ___ML___, ___JWASM___, ___ASMC___ (-Znk option until 2.28) and ___UASM___.
 
-In 64 bits was tested with ___JWASM___ by qWord, and recently some testing for ___ML64___ using Masm64 SDK (see [Masm32.com](http://masm32.com/board/index.php?board=53.0)). 
+In 64 bits was tested with ___JWASM___ by qWord, and recently some testing for ___ML64___ using Masm64 SDK. 
 
 Currently most projects are Neutral Bitness (same code for 32 and 64 bits) with ___UASM___.
 
@@ -36,4 +36,4 @@ ___Loops___ and ___Compound operators___ macros simplify in a controled way prog
 
   ### Accesory macros 
 
-These include some ___additional___ macros provided by qWord, and an ___invoke___ macro modified from Steve Hutchesson's [Masm64 SDK](http://masm32.com/board/index.php?board=53.0).
+These include some ___additional___ macros provided by qWord, and an ___invoke___ macro modified from Steve Hutchesson's Masm64 SDK.
